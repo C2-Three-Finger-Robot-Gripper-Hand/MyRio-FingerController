@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include "MyRio.h"
-
+#include "FingerController.h"
 
 /**
  * Overview:
@@ -38,6 +38,7 @@ int main(int argc, char **argv)
     /*
      * Your application code goes here.
      */
+    FingerController();
 
     /*
      * Close the myRIO NiFpga Session.
