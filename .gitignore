@@ -32,6 +32,6 @@
 *.app
 /Debug
 
-.project
-.cproject
+*.project
+*.cproject
 /.settings

@@ -6,7 +6,8 @@
  */
 
 #include "FingerController.h"
+#include <stdio.h>
 
 FingerController::FingerController(){
-
+	printf("TEST");
 }

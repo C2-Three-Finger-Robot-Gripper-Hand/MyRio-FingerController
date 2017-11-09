@@ -29,11 +29,11 @@ int main(int argc, char **argv)
      * This function MUST be called before all other functions. After this call
      * is complete the myRIO target will be ready to be used.
      */
-    status = MyRio_Open();
-    if (MyRio_IsNotSuccess(status))
-    {
-        return status;
-    }
+    //status = MyRio_Open();
+    //if (MyRio_IsNotSuccess(status))
+   // {
+   //     return status;
+   // }
 
     /*
      * Your application code goes here.
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
      * Close the myRIO NiFpga Session.
      * This function MUST be called after all other functions.
      */
-    status = MyRio_Close();
+   /// status = MyRio_Close();
 
     return status;
 }
