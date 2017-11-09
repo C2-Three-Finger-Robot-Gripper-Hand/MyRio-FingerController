@@ -24,8 +24,7 @@ NiFpga_Session myrio_session;
  * Define the location of the bit file. The bit file must be located in
  * this folder.
  */
-#define MyRio_DefaultFolder "/var/local/natinst/bitfiles/"
-#define MyRio_BitfilePath MyRio_DefaultFolder MyRio_Bitfile
+#define MyRio_BitfilePath MyRio_Bitfile
 
 
 /**

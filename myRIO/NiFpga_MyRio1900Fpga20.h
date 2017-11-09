@@ -19,7 +19,7 @@
  *
  *    static const char* const Bitfile = "C:\\" NiFpga_MyRio1900Fpga20_Bitfile;
  */
-#define NiFpga_MyRio1900Fpga20_Bitfile "NiFpga_MyRio1900Fpga20.lvbitx"
+#define NiFpga_MyRio1900Fpga20_Bitfile "/home/admin/gripperhand/fingercontroller/NiFpga_MyRio1900Fpga20.lvbitx"
 
 /**
  * The signature of the FPGA bitfile.
