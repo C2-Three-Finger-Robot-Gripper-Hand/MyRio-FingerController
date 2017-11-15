@@ -33,7 +33,7 @@ QuadratureCounterEncoder::QuadratureCounterEncoder(const Encoder_Config *encoder
 	 * Set bit 5 of the SYSSELECTB register to enable ENCB functionality.
 	 * The functionality of these bits is specified in the documentation.
 	 */
-	selectReg = selectReg | (1 << 5);
+	selectReg = selectReg | (1 << encoder_config->indicator_enable_bit);
 
 	/*
 	 * Write the updated value of the SYSSELECTB register.

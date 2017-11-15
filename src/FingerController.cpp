@@ -14,11 +14,14 @@ FingerController::FingerController(){
 	printf("TEST\n");
 	motor1_encoder = new QuadratureCounterEncoder(&MOTOR1_ENCODER_CONFIG);
 	motor2_encoder = new QuadratureCounterEncoder(&MOTOR2_ENCODER_CONFIG);
+	motor3_encoder = new QuadratureCounterEncoder(&MOTOR3_ENCODER_CONFIG);
 
 	for(;;){
 		uint32_t steps1 = motor1_encoder->readSteps();
 		uint32_t steps2 = motor2_encoder->readSteps();
-		printf("Steps enc 1 %d, Steps enc 2 %d\n", steps1, steps2);
+		uint32_t steps3 = motor3_encoder->readSteps();
+
+		printf("Steps enc 1 %d, Steps enc 2 %d, Steps enc 3 %d\n", steps1, steps2, steps3);
 		sleep(1);
 	}
 }
