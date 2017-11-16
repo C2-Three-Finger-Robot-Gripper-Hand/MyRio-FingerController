@@ -5,9 +5,15 @@
  */
 
 #include <stdio.h>
+#include <cstdlib>
 #include "MyRio.h"
 #include "FingerController.h"
 #include "NiFpga_MyRio1900Fpga20.h"
+
+void exiting(){
+    MyRio_Close();
+}
+
 /**
  * Overview:
  * myRIO main function. This template contains basic code to open the myRIO
@@ -35,6 +41,9 @@ int main(int argc, char **argv)
         return status;
     }
 
+    //Add closing function on exit
+    std::atexit(exiting);
+
     /*
      * Your application code goes here.
      */
@@ -44,7 +53,8 @@ int main(int argc, char **argv)
      * Close the myRIO NiFpga Session.
      * This function MUST be called after all other functions.
      */
-    status = MyRio_Close();
 
-    return status;
+    return 1;
 }
+
+
