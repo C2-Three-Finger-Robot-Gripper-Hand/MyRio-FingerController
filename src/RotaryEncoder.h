@@ -17,25 +17,20 @@ typedef struct{
 	uint8_t	      indicator_enable_bit;
 } Encoder_Config;
 
-class IRotaryEncoder{
-public:
-	virtual ~IRotaryEncoder(){}
-	virtual uint32_t readSteps() = 0;
+enum Rotary_Encoder_Direction{
+	Incrementing,
+	Decrementing
 };
 
-class QuadratureCounterEncoder : public IRotaryEncoder{
+class RotaryEncoder{
 public:
-	QuadratureCounterEncoder(const Encoder_Config *encoder_config);
-	virtual uint32_t readSteps();
+	RotaryEncoder(const Encoder_Config *encoder_config);
+	~RotaryEncoder(){}
+	uint32_t readSteps();
 private:
     MyRio_Encoder encoder;
 	uint32_t steps;
-	const char* direction;
-};
-
-class FPGACounterEncoder : public IRotaryEncoder{
-public:
-
+	Rotary_Encoder_Direction direction;
 };
 
 #endif /* ROTARYENCODER_H_ */

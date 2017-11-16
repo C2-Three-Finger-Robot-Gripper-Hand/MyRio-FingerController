@@ -33,9 +33,9 @@ const Encoder_Config MOTOR3_ENCODER_CONFIG = {
 class FingerController {
 public:
 	FingerController();
-	IRotaryEncoder *motor1_encoder;
-	IRotaryEncoder *motor2_encoder;
-	IRotaryEncoder *motor3_encoder;
+	RotaryEncoder *motor1_encoder;
+	RotaryEncoder *motor2_encoder;
+	RotaryEncoder *motor3_encoder;
 };
 
 

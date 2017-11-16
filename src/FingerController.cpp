@@ -12,9 +12,9 @@
 
 FingerController::FingerController(){
 	printf("TEST\n");
-	motor1_encoder = new QuadratureCounterEncoder(&MOTOR1_ENCODER_CONFIG);
-	motor2_encoder = new QuadratureCounterEncoder(&MOTOR2_ENCODER_CONFIG);
-	motor3_encoder = new QuadratureCounterEncoder(&MOTOR3_ENCODER_CONFIG);
+	motor1_encoder = new RotaryEncoder(&MOTOR1_ENCODER_CONFIG);
+	motor2_encoder = new RotaryEncoder(&MOTOR2_ENCODER_CONFIG);
+	motor3_encoder = new RotaryEncoder(&MOTOR3_ENCODER_CONFIG);
 
 	for(;;){
 		uint32_t steps1 = motor1_encoder->readSteps();
