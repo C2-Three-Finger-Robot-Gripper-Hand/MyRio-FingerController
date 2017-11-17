@@ -36,7 +36,7 @@ FingerController::FingerController(){
 //	motor_3->forwards();
 //	motor_3->set_speed(50);
 
-	LimitSwitch Diob10;
+//	LimitSwitch Diob10;
 
 	printf("Setup done \n");
 	for(;;){
@@ -46,10 +46,10 @@ FingerController::FingerController(){
 //
 //		printf("Steps enc 1 %d, Steps enc 2 %d, Steps enc 3 %d\n", steps1, steps2, steps3);
 
-		printf("Reading...\n");
-		bool isHigh = Diob10.isHigh();
-
-		printf("Diob10 is high: %d\n", isHigh);
+//		printf("Reading...\n");
+//		bool isHigh = Diob10.isHigh();
+//
+//		printf("Diob10 is high: %d\n", isHigh);
 		sleep(1);
 	}
 }

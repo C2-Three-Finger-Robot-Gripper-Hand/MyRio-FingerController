@@ -12,7 +12,7 @@
 
 class LimitSwitch{
 public:
-	LimitSwitch();
+	LimitSwitch(MyRio_Dio pin);
 	bool isHigh();
 private:
 	NiFpga_Bool ishigh;
