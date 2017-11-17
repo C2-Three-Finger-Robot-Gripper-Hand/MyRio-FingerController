@@ -47,15 +47,26 @@ FingerController::FingerController(){
 	motor_controller3 = new MotorController(&MOTOR3_CONFIG, &MOTOR3_ENCODER_CONFIG,
 					&MOTOR3_END_SWITCH1_CONFIG, &MOTOR3_END_SWITCH2_CONFIG);
 
+	motor_controller3->motor->enable();
+	motor_controller3->motor->backwards();
+	motor_controller3->motor->set_speed(20);
+
 	printf("Setup done \n");
 	for(;;){
-		uint32_t steps1 = motor_controller1->encoder->readSteps();
-		uint32_t steps2 = motor_controller2->encoder->readSteps();
-		uint32_t steps3 = motor_controller3->encoder->readSteps();
-
-		printf("Steps enc 1 %d, Steps enc 2 %d, Steps enc 3 %d\n", steps1, steps2, steps3);
-
+//		uint32_t steps1 = motor_controller1->encoder->readSteps();
+//		uint32_t steps2 = motor_controller2->encoder->readSteps();
+//		uint32_t steps3 = motor_controller3->encoder->readSteps();
+//
+//		printf("Steps enc 1 %d, Steps enc 2 %d, Steps enc 3 %d\n", steps1, steps2, steps3);
+//
 		printf("Limitswitchses are reached -> %d : %d\n", motor_controller3->end_switch_1->hasReachedLimit(), motor_controller3->end_switch_2->hasReachedLimit());
+//
+		if (motor_controller3->end_switch_2->hasReachedLimit()) {
+			motor_controller3->motor->forwards();
+		}
+		if (motor_controller3->end_switch_1->hasReachedLimit()) {
+			motor_controller3->motor->backwards();
+		}
 		sleep(1);
 	}
 }
