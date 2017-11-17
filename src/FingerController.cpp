@@ -55,7 +55,7 @@ FingerController::FingerController(){
 
 		printf("Steps enc 1 %d, Steps enc 2 %d, Steps enc 3 %d\n", steps1, steps2, steps3);
 
-		printf("Limitswitchses are reached -> %d : %d", motor_controller3->end_switch_1->hasReachedLimit(), motor_controller3->end_switch_2->hasReachedLimit());
+		printf("Limitswitchses are reached -> %d : %d\n", motor_controller3->end_switch_1->hasReachedLimit(), motor_controller3->end_switch_2->hasReachedLimit());
 		sleep(1);
 	}
 }

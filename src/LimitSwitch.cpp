@@ -13,7 +13,7 @@ LimitSwitch::LimitSwitch(const LimitSwitch_Config *limitSwitch_config){
 }
 
 NiFpga_Bool LimitSwitch::hasReachedLimit() {
-	this->reachedLimit = Dio_ReadBit(&this->pin);
+	this->reachedLimit = !Dio_ReadBit(&this->pin);
 	return this->reachedLimit;
 }
 
