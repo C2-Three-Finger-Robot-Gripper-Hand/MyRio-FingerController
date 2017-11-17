@@ -7,8 +7,14 @@
 
 #include "LimitSwitch.h"
 
-LimitSwitch::LimitSwitch(){
+LimitSwitch::LimitSwitch(const LimitSwitch_Config *limitSwitch_config){
+	this->reachedLimit = NiFpga_False;
+	this->pin = limitSwitch_config->switch_pin;
+}
 
+NiFpga_Bool LimitSwitch::hasReachedLimit() {
+	this->reachedLimit = !Dio_ReadBit(&this->pin);
+	return this->reachedLimit;
 }
 
 
