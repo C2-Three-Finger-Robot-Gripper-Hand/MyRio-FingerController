@@ -8,7 +8,6 @@
 #include "I2CCommunicator.h"
 
 I2CCommunicator::I2CCommunicator(){
-
 }
 
 
