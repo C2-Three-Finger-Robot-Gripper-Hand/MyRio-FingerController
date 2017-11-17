@@ -10,12 +10,16 @@
 
 #include "DIO.h"
 
+typedef struct{
+	 MyRio_Dio switch_pin;
+} LimitSwitch_Config;
+
 class LimitSwitch{
 public:
-	LimitSwitch(MyRio_Dio pin);
-	bool isHigh();
+	LimitSwitch(const LimitSwitch_Config *limitSwitch_config);
+	NiFpga_Bool hasReachedLimit();
 private:
-	NiFpga_Bool ishigh;
+	NiFpga_Bool reachedLimit;
 	MyRio_Dio pin;
 };
 
