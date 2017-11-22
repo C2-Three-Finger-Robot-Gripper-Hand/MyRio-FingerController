@@ -44,11 +44,11 @@ void Motor::disable(){
 }
 
 void Motor::forwards(){
-	forward = NiFpga_True;
-    Dio_WriteBit(&direction_pin, forward);
+	direction = Forwards;
+    Dio_WriteBit(&direction_pin, direction);
 }
 
 void Motor::backwards(){
-	forward = NiFpga_False;
-    Dio_WriteBit(&direction_pin, forward);
+	direction = Backwards;
+    Dio_WriteBit(&direction_pin, direction);
 }
