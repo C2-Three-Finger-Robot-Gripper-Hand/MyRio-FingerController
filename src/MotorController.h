@@ -15,6 +15,7 @@
 class MotorController{
 public:
 	MotorController(const Motor_Config *motor_config, const Encoder_Config *encoder_config, const LimitSwitch_Config *end_switch_1, const LimitSwitch_Config *end_switch_2);
+	~MotorController();
 
 	Motor* motor;
 	RotaryEncoder* encoder;

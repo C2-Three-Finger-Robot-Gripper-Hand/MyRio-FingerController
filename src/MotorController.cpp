@@ -14,6 +14,13 @@ MotorController::MotorController(const Motor_Config *motor_config, const Encoder
 	this->end_switch_2 = new LimitSwitch(end_switch_2);
 }
 
+MotorController::~MotorController(){
+    this->motor->disable();
+    this->motor->backwards();
+    this->motor->set_speed(0);
+}
+
+
 
 
 
