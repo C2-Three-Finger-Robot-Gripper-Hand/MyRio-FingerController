@@ -165,3 +165,21 @@ uint32_t Encoder_Counter(MyRio_Encoder* channel)
      */
     return counterValue;
 }
+
+void Encoder_Reset_Value(MyRio_Encoder* channel){
+    uint8_t cnfgValue;
+
+    /*
+     * Get the current value of the configure register.
+     *
+     * The returned NiFpga_Status value is stored for error checking.
+     */
+    NiFpga_ReadU8(myrio_session, channel->cnfg, &cnfgValue);
+
+    // Write reset bit so counter value will be 0
+	NiFpga_WriteU8(myrio_session, channel->cnfg, cnfgValue | Encoder_Reset);
+
+	//Remove reset bit so we can resume counting
+	NiFpga_WriteU8(myrio_session, channel->cnfg, cnfgValue);
+
+}

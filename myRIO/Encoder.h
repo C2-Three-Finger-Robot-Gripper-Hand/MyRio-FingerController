@@ -104,6 +104,12 @@ uint8_t Encoder_Status(MyRio_Encoder* channel);
  */
 uint32_t Encoder_Counter(MyRio_Encoder* channel);
 
+/**
+ * Reset encoder value
+ */
+
+void Encoder_Reset_Value(MyRio_Encoder* channel);
+
 #if NiFpga_Cpp
 }
 #endif
