@@ -17,6 +17,9 @@ typedef struct{
 	 MyRio_Aio speed_pin;
 } Motor_Config;
 
+#define Forwards NiFpga_False
+#define Backwards NiFpga_True
+
 class Motor{
 public:
 	Motor(const Motor_Config *config);
@@ -30,7 +33,7 @@ private:
 	MyRio_Dio direction_pin;
 
 	NiFpga_Bool is_enabled;
-	NiFpga_Bool forward;
+	NiFpga_Bool direction;
 
 	MyRio_Aio speed_pin;
 	double current_speed;
