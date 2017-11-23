@@ -26,6 +26,8 @@ public:
 	LimitSwitch* end_switch_2;
 	void calibrate();
 	uint32_t max_steps;
+	NiFpga_Bool isCalibrated;
+
 };
 
 #endif /* MOTORCONTROLLER_H_ */

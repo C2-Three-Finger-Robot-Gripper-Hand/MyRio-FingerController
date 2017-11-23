@@ -41,6 +41,7 @@ void MotorController::calibrate() {
 	}
 	this->motor->disable();
 	this->max_steps = this->encoder->readSteps();
+	this->isCalibrated = NiFpga_True;
 //
 //	printf("Reached endswitch 1\n");
 //	printf("Max steps: %d\n", this->max_steps);
