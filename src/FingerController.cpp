@@ -48,14 +48,20 @@ FingerController::FingerController(){
 					&MOTOR3_END_SWITCH1_CONFIG, &MOTOR3_END_SWITCH2_CONFIG);
 
 	printf("Setup done \n");
+
+	printf("Start kalibratie\n");
+	motor_controller3->calibrate();
+	printf("eind kalibratie, max steps: %d\n", motor_controller3->max_steps);
+
 	for(;;){
-		uint32_t steps1 = motor_controller1->encoder->readSteps();
-		uint32_t steps2 = motor_controller2->encoder->readSteps();
-		uint32_t steps3 = motor_controller3->encoder->readSteps();
-
-		printf("Steps enc 1 %d, Steps enc 2 %d, Steps enc 3 %d\n", steps1, steps2, steps3);
-
-		printf("Limitswitchses are reached -> %d : %d\n", motor_controller3->end_switch_1->hasReachedLimit(), motor_controller3->end_switch_2->hasReachedLimit());
+//		uint32_t steps1 = motor_controller1->encoder->readSteps();
+//		uint32_t steps2 = motor_controller2->encoder->readSteps();
+//		uint32_t steps3 = motor_controller3->encoder->readSteps();
+//
+//		printf("Steps enc 1 %d, Steps enc 2 %d, Steps enc 3 %d\n", steps1, steps2, steps3);
+//
+//		printf("Limitswitchses are reached -> %d : %d\n", motor_controller3->end_switch_1->hasReachedLimit(), motor_controller3->end_switch_2->hasReachedLimit());
+//		printf("loop\n");
 		sleep(1);
 	}
 }
