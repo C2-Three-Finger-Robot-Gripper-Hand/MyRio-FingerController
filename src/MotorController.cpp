@@ -7,34 +7,47 @@
 
 #include "MotorController.h"
 #include <unistd.h>
+#include "FingerController.h"
+#include <stdio.h>
 
 MotorController::MotorController(const Motor_Config *motor_config, const Encoder_Config *encoder_config, const LimitSwitch_Config *end_switch_1, const LimitSwitch_Config *end_switch_2){
 	this->motor = new Motor(motor_config);
 	this->encoder = new RotaryEncoder(encoder_config);
 	this->end_switch_1 = new LimitSwitch(end_switch_1);
 	this->end_switch_2 = new LimitSwitch(end_switch_2);
-	this->motorPid = new PID(0.1, 100, -100, 0.1, 0.01, 0.5);
-	this->max_steps = -1;
+	this->motorPid = new PID(1.0/TICKS_PER_SECOND, 100.0, -100.0, 0.005, 0.0008, 0.00005);
+	this->maxSteps = -1;
+	this->isCalibrated = NiFpga_False;
+	this->currentState = idle;
+}
 
-	currentState = idle;
+void MotorController::setState(MotorControllerState state){
+	if(state == idle){
+		this->currentState = idle;
+		this->motor->disable();
+	}else if(state == running && isCalibrated){
+		printf("Switching to running state \n");
+		this->currentState = running;
+		this->motor->enable();
+	}
 }
 
 void MotorController::run(){
 	if(currentState == running){
-		//hardcoded 9000 steps
-        double motorSpeed = motorPid->calculate(9000, encoder->readSteps());
+		//hardcoded 9000 steps 165000
+        double motorSpeed = motorPid->calculate(maxSteps/2, (int)encoder->readSteps());
+        printf("Speed: %f Steps: %zu \n", motorSpeed, encoder->steps);
         if(motorSpeed >= 0){
         	motor->set_speed(motorSpeed);
-        	motor->forwards();
+        	motor->backwards();
         }else{
         	motor->set_speed(-1*motorSpeed);
-        	motor->backwards();
+        	motor->forwards();
         }
 	}else if(currentState == calibrating){
 
 	}
 }
-
 
 void MotorController::calibrate() {
 	this->motor->set_speed(20);
@@ -60,7 +73,7 @@ void MotorController::calibrate() {
 		usleep(1000);
 	}
 	this->motor->disable();
-	this->max_steps = this->encoder->readSteps();
+	this->maxSteps = this->encoder->readSteps();
 	this->isCalibrated = NiFpga_True;
 //
 //	printf("Reached endswitch 1\n");

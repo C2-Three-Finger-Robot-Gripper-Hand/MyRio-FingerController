@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cmath>
 #include "pid.h"
+#include <stdio.h>
 
 using namespace std;
 
@@ -64,12 +65,11 @@ PIDImpl::PIDImpl( double dt, double max, double min, double Kp, double Kd, doubl
 
 double PIDImpl::calculate( double setpoint, double pv )
 {
-
     // Calculate error
-    double error = setpoint - pv;
+	double error = setpoint - pv;
 
     // Proportional term
-    double Pout = _Kp * error;
+	double Pout = _Kp * error;
 
     // Integral term
     _integral += error * _dt;

@@ -36,9 +36,10 @@ public:
 
 	void run();
 	void calibrate();
+	void setState(MotorControllerState state);
 private:
 	MotorControllerState currentState;
-	uint32_t max_steps;
+	uint32_t maxSteps;
 	NiFpga_Bool isCalibrated;
 };
 
