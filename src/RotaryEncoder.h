@@ -27,6 +27,7 @@ public:
 	RotaryEncoder(const Encoder_Config *encoder_config);
 	~RotaryEncoder(){}
 	uint32_t readSteps();
+	void resetSteps();
 private:
     MyRio_Encoder encoder;
 	uint32_t steps;

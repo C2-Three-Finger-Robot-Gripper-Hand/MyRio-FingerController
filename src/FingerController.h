@@ -16,6 +16,8 @@
 #include "MotorController.h"
 #include "LimitSwitch.h"
 
+#define TICKS_PER_SECOND 100
+
 /*Rotary encoder configs*/
 const Encoder_Config MOTOR1_ENCODER_CONFIG = {
 	{ENCBCNFG, ENCBSTAT, ENCBCNTR},
@@ -61,13 +63,10 @@ const LimitSwitch_Config MOTOR3_END_SWITCH2_CONFIG = {{DIOB_70DIR, DIOB_70OUT, D
 class FingerController {
 public:
 	FingerController();
+	~ FingerController();
+
+	void run();
 private:
-//	Motor *motor_1;
-//	Motor *motor_2;
-//	Motor *motor_3;
-//	RotaryEncoder *motor1_encoder;
-//	RotaryEncoder *motor2_encoder;
-//	RotaryEncoder *motor3_encoder;
 	MotorController *motor_controller1;
 	MotorController *motor_controller2;
 	MotorController *motor_controller3;

@@ -58,3 +58,8 @@ uint32_t RotaryEncoder::readSteps(){
 	return steps;
 }
 
+void RotaryEncoder::resetSteps(){
+	steps = 0;
+	Encoder_Reset_Value(&this->encoder);
+}
+
