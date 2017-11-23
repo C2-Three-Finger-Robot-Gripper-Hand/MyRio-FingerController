@@ -47,6 +47,13 @@ void MotorController::calibrate() {
 //	printf("Max steps: %d\n", this->max_steps);
 }
 
+MotorController::~MotorController(){
+    this->motor->disable();
+    this->motor->backwards();
+    this->motor->set_speed(0);
+}
+
+
 
 
 

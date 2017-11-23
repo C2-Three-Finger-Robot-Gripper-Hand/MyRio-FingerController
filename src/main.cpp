@@ -9,10 +9,25 @@
 #include "MyRio.h"
 #include "FingerController.h"
 #include "NiFpga_MyRio1900Fpga20.h"
+#include <exception>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 
-void exiting(){
+static FingerController *fingerController;
+
+
+void exiting(int s){
+	delete fingerController;
     MyRio_Close();
+    exit(s);
 }
+
+void exit(){
+	exiting(0);
+}
+
 
 /**
  * Overview:
@@ -42,12 +57,23 @@ int main(int argc, char **argv)
     }
 
     //Add closing function on exit
-    std::atexit(exiting);
+    struct sigaction sigIntHandler;
+
+    sigIntHandler.sa_handler = exiting;
+    sigemptyset(&sigIntHandler.sa_mask);
+    sigIntHandler.sa_flags = 0;
+
+    sigaction(SIGINT, &sigIntHandler, NULL);
+
+    std::atexit(exit);
+    std::set_terminate(exit);
 
     /*
      * Your application code goes here.
      */
-    FingerController();
+    fingerController = new FingerController();
+
+    fingerController->run();
 
     /*
      * Close the myRIO NiFpga Session.
