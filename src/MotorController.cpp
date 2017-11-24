@@ -35,8 +35,11 @@ void MotorController::setState(MotorControllerState state){
 void MotorController::run(){
 	if(currentState == running){
 		//hardcoded 9000 steps 165000
-        double motorSpeed = motorPid->calculate(maxSteps/2, (int)encoder->readSteps());
-        printf("Speed: %f Steps: %zu \n", motorSpeed, encoder->steps);
+
+		double motorPositionStep = (this->motorPosition / MOTOR_POSITION_MAX) * this->maxSteps;
+//		printf("Motor position: %f Max steps: %zu Motor step position: %f \n", this->motorPosition, this->maxSteps, motorStepPosition);
+        double motorSpeed = motorPid->calculate(motorPositionStep, (int)encoder->readSteps());
+        printf("Speed: %f Steps: %zu Steps position: %f\n", motorSpeed, encoder->steps, motorPositionStep);
         if(motorSpeed >= 0){
         	motor->set_speed(motorSpeed);
         	motor->backwards();
@@ -75,9 +78,16 @@ void MotorController::calibrate() {
 	this->motor->disable();
 	this->maxSteps = this->encoder->readSteps();
 	this->isCalibrated = NiFpga_True;
-//
-//	printf("Reached endswitch 1\n");
-//	printf("Max steps: %d\n", this->max_steps);
+	this->setMotorPosition(MOTOR_POSITION_MAX/2);
+}
+
+void MotorController::setMotorPosition(double degree) {
+	if (this->isCalibrated) {
+		if (degree < MOTOR_POSITION_MIN) degree = MOTOR_POSITION_MIN;
+		if (degree > MOTOR_POSITION_MAX) degree = MOTOR_POSITION_MAX;
+
+		this->motorPosition = degree;
+	}
 }
 
 MotorController::~MotorController(){

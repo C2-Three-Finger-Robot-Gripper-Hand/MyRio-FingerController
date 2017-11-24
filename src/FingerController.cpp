@@ -36,12 +36,15 @@ FingerController::~FingerController(){
 }
 
 void FingerController::run(){
+	printf("Start running\n");
 	printf("Start kalibratie\n");
 	motor_controller3->calibrate();
+//	motor_controller3->setMotorPosition(0.0);
 
 	motor_controller3->setState(running);
 	for(;;){
 		motor_controller3->run();
+
 		usleep(1000000 / TICKS_PER_SECOND);
 	}
 }

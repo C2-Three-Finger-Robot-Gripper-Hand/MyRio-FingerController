@@ -13,6 +13,9 @@
 #include "LimitSwitch.h"
 #include "Pid.h"
 
+#define MOTOR_POSITION_MAX 180.0
+#define MOTOR_POSITION_MIN 0.0
+
 enum MotorControllerState{
 	idle,
 	running,
@@ -37,10 +40,12 @@ public:
 	void run();
 	void calibrate();
 	void setState(MotorControllerState state);
+	void setMotorPosition(double degree);
 private:
 	MotorControllerState currentState;
 	uint32_t maxSteps;
 	NiFpga_Bool isCalibrated;
+	double motorPosition;
 };
 
 #endif /* MOTORCONTROLLER_H_ */
