@@ -15,7 +15,7 @@ MotorController::MotorController(const Motor_Config *motor_config, const Encoder
 	this->encoder = new RotaryEncoder(encoder_config);
 	this->end_switch_1 = new LimitSwitch(end_switch_1);
 	this->end_switch_2 = new LimitSwitch(end_switch_2);
-	this->motorPid = new PID(1.0/TICKS_PER_SECOND, 100.0, -100.0, 0.005, 0.0008, 0.00005);
+	this->motorPid = new PID(1.0/TICKS_PER_SECOND, 100.0, -100.0, 0.008, 0.0003, 0.008);
 	this->maxSteps = -1;
 	this->isCalibrated = NiFpga_False;
 	this->currentState = idle;
@@ -38,7 +38,7 @@ void MotorController::run(){
 
 		double motorPositionStep = (this->motorPosition / MOTOR_POSITION_MAX) * this->maxSteps;
 //		printf("Motor position: %f Max steps: %zu Motor step position: %f \n", this->motorPosition, this->maxSteps, motorStepPosition);
-        double motorSpeed = motorPid->calculate(motorPositionStep, (int)encoder->readSteps());
+        double motorSpeed = motorPid->calculate(motorPositionStep/10, (int)encoder->readSteps()/10);
         printf("Speed: %f Steps: %zu Steps position: %f\n", motorSpeed, encoder->steps, motorPositionStep);
         if(motorSpeed >= 0){
         	motor->set_speed(motorSpeed);
