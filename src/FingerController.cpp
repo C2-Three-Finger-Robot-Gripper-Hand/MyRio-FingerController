@@ -12,10 +12,13 @@
 #include "RotaryEncoder.h"
 #include "LimitSwitch.h"
 #include <unistd.h>
+#include "ModbusCommunicator.h"
 
 FingerController::FingerController(){
 	printf("Projectgroep C2 - Finger controller");
 	printf("\n");
+
+	ModbusCommunicator();
 
 	motor_controller1 = new MotorController(&MOTOR1_CONFIG, &MOTOR1_ENCODER_CONFIG,
 			&MOTOR3_END_SWITCH1_CONFIG, &MOTOR3_END_SWITCH2_CONFIG);

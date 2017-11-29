@@ -49,6 +49,7 @@
 								<option id="gnu.cpp.link.option.libs.665914307" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="pthread"/>
 									<listOptionValue builtIn="false" value="dl"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="visa"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.634253455" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/myRIO}&quot;"/>
