@@ -66,7 +66,7 @@ public:
 	~ FingerController();
 
 	void run();
-private:
+
 	MotorController *motor_controller1;
 	MotorController *motor_controller2;
 	MotorController *motor_controller3;

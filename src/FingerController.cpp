@@ -18,7 +18,6 @@ FingerController::FingerController(){
 	printf("Projectgroep C2 - Finger controller");
 	printf("\n");
 
-	ModbusCommunicator();
 
 	motor_controller1 = new MotorController(&MOTOR1_CONFIG, &MOTOR1_ENCODER_CONFIG,
 			&MOTOR3_END_SWITCH1_CONFIG, &MOTOR3_END_SWITCH2_CONFIG);
@@ -29,6 +28,8 @@ FingerController::FingerController(){
 	motor_controller3 = new MotorController(&MOTOR3_CONFIG, &MOTOR3_ENCODER_CONFIG,
 					&MOTOR3_END_SWITCH1_CONFIG, &MOTOR3_END_SWITCH2_CONFIG);
 
+
+	ModbusCommunicator::start_thread(this);
 	printf("Setup done \n");
 }
 
