@@ -5,8 +5,11 @@
  *      Author: Project team C2
  */
 
+
 #ifndef FINGERCONTROLLER_H_
 #define FINGERCONTROLLER_H_
+
+#define TICKS_PER_SECOND 100
 
 #include "Encoder.h"
 #include "RotaryEncoder.h"
@@ -16,7 +19,6 @@
 #include "MotorController.h"
 #include "LimitSwitch.h"
 
-#define TICKS_PER_SECOND 100
 
 /*Rotary encoder configs*/
 const Encoder_Config MOTOR1_ENCODER_CONFIG = {

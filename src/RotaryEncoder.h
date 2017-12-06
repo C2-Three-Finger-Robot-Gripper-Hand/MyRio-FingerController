@@ -28,9 +28,9 @@ public:
 	~RotaryEncoder(){}
 	uint32_t readSteps();
 	void resetSteps();
+	uint32_t steps;
 private:
     MyRio_Encoder encoder;
-	uint32_t steps;
 	Rotary_Encoder_Direction direction;
 };
 
