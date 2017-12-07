@@ -15,8 +15,9 @@
 #include <pthread.h>
 
 int convert_slice(const char *s, size_t a, size_t b) {
-	char tmp[b - a];
+	char tmp[b - a + 1];
 	strncpy(tmp, s+a, b-a);
+	tmp[b-a] = '\0';
     return (int)strtol(tmp, NULL, 16);
 }
 
@@ -25,9 +26,9 @@ ModbusCommunicator::ModbusCommunicator(FingerController *fingerController){
 
 	this->writePin = {DIOA_70DIR, DIOA_70OUT, DIOA_70IN, 0};
 
-	holdingRegisters[0] = (int*)fingerController->motor_controller1->encoder->steps,
-	holdingRegisters[1] = (int*)fingerController->motor_controller2->encoder->steps,
-	holdingRegisters[2] = (int*)fingerController->motor_controller3->encoder->steps,
+	holdingRegisters[0] = &this->fingerController->motor_controller1->motorPosition;
+	holdingRegisters[1] = &this->fingerController->motor_controller2->motorPosition;
+	holdingRegisters[2] = &this->fingerController->motor_controller3->motorPosition;
 
 
     /*;
@@ -44,34 +45,27 @@ ModbusCommunicator::ModbusCommunicator(FingerController *fingerController){
 }
 
 void ModbusCommunicator::run(){
-	uint8_t readData = 0;
-    int32_t status = 0;
+	ViUInt32 read_count = 0;
+	int32_t status = 0;
 
-    /*
-     * Reads data from a UART port.
-     */
-    printf("Start reading modbus messages \n");
-    char message[255] = {0};
-    int position = 0;
     enableRX();
-
-    printf("uart: %s \n",  this->uart.name);
-    for(;;){
-        status = Uart_Read(&uart, &readData, 1);
-        if (status != VI_ERROR_TMO){
-            if(readData == ':'){		//New message, discard old message
-            	memset(message, 0, sizeof message );
-            	position = 0;
-            }else if(readData == '\n'){	//Message ended.
-            	message[position] = '\0';
-            	printf("Message received!: %s \n\n", message);
-            	parseMessage(message, position);
-            }else if(readData != '\r'){
-            	message[position] = readData;
-            	position++;
-            }
-        }
-    }
+	status = Uart_Read(&uart, buf, 254, &read_count);
+	if (status != VI_ERROR_TMO){
+		for(int i = 0; i < (long)read_count; i++){
+			if(buf[i] == ':'){		//New message, discard old message
+				memset(message, 0, sizeof message );
+				position = 0;
+			}else if(buf[i] == '\n'){	//Message ended.
+				message[position] = '\0';
+				printf("Message received!: %s \n", message);
+				parseMessage(message, position);
+				printf("\n\n");
+			}else if(buf[i] != '\r'){
+				message[position] = buf[i];
+				position++;
+			}
+		}
+	}
 }
 
 void ModbusCommunicator::parseMessage(char *message, int length){
@@ -86,15 +80,39 @@ void ModbusCommunicator::parseMessage(char *message, int length){
 	if(lrc == lrc_calc && adress == SlaveAdress){ //Message located to us
 		if(function == 3){
 			readHoldingRegister(message, length);
+		}else if(function == 16){
+			writeHoldingRegister(message, length);
 		}
 	}
+}
+
+void ModbusCommunicator::writeHoldingRegister(char *message, int length){
+	int startAdress = convert_slice(message, 4, 8);
+	int registerQuantity = convert_slice(message, 8, 12);
+	int dataLength = convert_slice(message, 12, 14) * 2;
+
+	printf("Write holding registor from %d and a number of %d \n", startAdress, registerQuantity);
+
+//    for(int i = 0; i < registerQuantity; i++){
+//    	int data = convert_slice(message, 14 + );
+//    	printf("Register value: %d\n",  holdingRegisters[startAdress + i]);
+//    }
+
+	char data[10];
+	data[0] = '1';								//Function code
+	data[1] = '0';								//Function code
+    sprintf(&data[2], "%04x", startAdress);		//Starting address
+    sprintf(&data[6], "%04x", registerQuantity);//Quantity registers
+
+    sendData(data, 10);
 }
 
 void ModbusCommunicator::readHoldingRegister(char *message, int length){
 	int startAdress = convert_slice(message, 4, 8);
 	int registerQuantity = convert_slice(message, 8, 12);
 
-	printf("Reading holding registor from %d and a number of %d \n", startAdress, registerQuantity);
+	printf("Message received! NR2: %s \n", message);
+	printf("Reading holding register from %d and a number of %d \n", startAdress, registerQuantity);
 
 	int dataLength = 4 + registerQuantity * 4;
 	char data[dataLength];
@@ -102,6 +120,7 @@ void ModbusCommunicator::readHoldingRegister(char *message, int length){
 	data[1] = '3';								//Function code
     sprintf(&data[2], "%02x", registerQuantity * 2);	//Byte count
     for(int i = 0; i < registerQuantity; i++){
+    	printf("Register value: %d\n",  holdingRegisters[startAdress + i]);
         sprintf(&data[4 + i * 4], "%04x", holdingRegisters[startAdress + i]);				// Register value
     }
 
@@ -119,7 +138,6 @@ void ModbusCommunicator::sendData(char *data, int length){
     sprintf(&message[3+length], "%02x", calculateLRC(message, 1, length+3));	//LRC
     message[3+length+2] = '\r';					//End char
     message[3+length+3] = '\n';					//End char
-
     printf("Sending message: %s \n", message);
 
     uint8_t message_uint8[msgLength];
@@ -132,7 +150,7 @@ void ModbusCommunicator::sendData(char *data, int length){
 
     Uart_Write(&uart, message_uint8, msgLength);
 
-	enableRX();
+    enableRX();
 }
 
 short ModbusCommunicator::calculateLRC(char *message, int start, int end){

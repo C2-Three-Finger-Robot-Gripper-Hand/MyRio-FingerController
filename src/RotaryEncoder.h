@@ -28,7 +28,6 @@ public:
 	~RotaryEncoder(){}
 	uint32_t readSteps();
 	void resetSteps();
-
 	uint32_t steps;
 private:
     MyRio_Encoder encoder;

@@ -9,9 +9,6 @@
 #include "UART.h"
 #include "visa.h"
 
-#define VisaDefaultTimeout 1000
-
-
 /**
  * Opens a UART session on an VISA implemented port.
  *
@@ -153,15 +150,30 @@ int32_t Uart_Close(MyRio_Uart* port)
  * @param[in]   nData   Number of bytes to read
  * @return      int32_t Error/success status
  */
-int32_t Uart_Read(MyRio_Uart* port, uint8_t* const data,
-                  const size_t nData)
-{
-    int32_t status = VI_SUCCESS;
-    ViUInt32 numberRead = 0;
+//int32_t Uart_Read(MyRio_Uart* port, uint8_t* const data,
+//                  const size_t nData)
+//{
+//    int32_t status = VI_SUCCESS;
+//    ViUInt32 numberRead = 0;
+//
+//    status = viRead(port->session, (ViBuf)data, (ViUInt32)nData, &numberRead);
+//
+//    return status;
+//}
 
-    status = viRead(port->session, (ViBuf)data, (ViUInt32)nData, &numberRead);
 
-    return status;
+int32_t Uart_Read(MyRio_Uart* port, char *buf, size_t buf_size, ViUInt32 *read_count){
+  memset((void*)buf, (char)0, buf_size);
+
+  ViStatus status = viRead(port->session, (ViByte*)buf, buf_size, read_count);
+  if(status != VI_SUCCESS &&
+     status != VI_SUCCESS_TERM_CHAR &&
+     status != VI_SUCCESS_MAX_CNT)
+  {
+	    return status;
+  }
+
+  return status;
 }
 
 

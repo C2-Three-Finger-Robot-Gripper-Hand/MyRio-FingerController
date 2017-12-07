@@ -26,14 +26,6 @@ public:
     void run();
     void start_thread();
 
-    static void *run_helper(void *context)
-    {
-        ModbusCommunicator *mc = (ModbusCommunicator *)context;
-        printf("TEST: %s \n", mc->uart.name);
-        mc->run();
-        return NULL;
-    }
-
     static void start_thread(FingerController *fingerController){
         pthread_t t;
         pthread_create(&t, NULL, &ModbusCommunicator::start_modbus, fingerController);
@@ -52,12 +44,17 @@ public:
     void parseMessage(char *message, int length);
     static short calculateLRC(char *message, int start, int end);
     void readHoldingRegister(char *message, int length);
+    void writeHoldingRegister(char *message, int length);
     void sendData(char *data, int length);
 
     void enableTX();
     void enableRX();
 
-	int *holdingRegisters[3];
+	double *holdingRegisters[3];
+
+	char message[254] = {0};
+    int position = 0;
+	char buf[254];
 };
 
 #endif /* I2CCOMMUNICATOR_H_ */

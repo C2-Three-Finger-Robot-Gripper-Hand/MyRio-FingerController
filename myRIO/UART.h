@@ -13,6 +13,8 @@
 #include <stddef.h>
 #include "visa.h"
 
+#define VisaDefaultTimeout 10
+
 
 /**
  * UART parity configurations.
@@ -74,8 +76,7 @@ int32_t Uart_Close(MyRio_Uart* port);
  * all the bytes are available to be removed from the FIFO, or until a timeout
  * occurs.
  */
-int32_t Uart_Read(MyRio_Uart* port, uint8_t* const data,
-                  const size_t nData);
+int32_t Uart_Read(MyRio_Uart* port, char *buf, size_t buf_size, ViUInt32 *read_count);
 
 
 /**

@@ -40,17 +40,19 @@ FingerController::~FingerController(){
 }
 
 void FingerController::run(){
-  printf("Start kalibratie\n");
-	motor_controller3->calibrate();
-	printf("eind kalibratie, max steps: %d\n", motor_controller3->max_steps);
+	printf("Start running\n");
+	printf("Start kalibratie\n");
 
+	ModbusCommunicator *mc = new ModbusCommunicator(this);
+
+	//motor_controller3->calibrate();
+//	motor_controller3->setMotorPosition(0.0);
+
+	motor_controller3->setState(running);
 	for(;;){
-		if (motor_controller3->end_switch_2->hasReachedLimit()) {
-			motor_controller3->motor->forwards();
-		}
-		if (motor_controller3->end_switch_1->hasReachedLimit()) {
-			motor_controller3->motor->backwards();
-		}
-	  usleep(1000000 / TICKS_PER_SECOND);
-  }
- }
+		mc->run();
+		motor_controller3->run();
+
+		usleep(1000000 / TICKS_PER_SECOND);
+	}
+}
