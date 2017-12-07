@@ -13,8 +13,8 @@
 
 typedef struct{
 	MyRio_Encoder encoder;
-	uint32_t      indicator;
-	uint8_t	      indicator_enable_bit;
+//	uint32_t      indicator;
+//	uint8_t	      indicator_enable_bit;
 } Encoder_Config;
 
 enum Rotary_Encoder_Direction{

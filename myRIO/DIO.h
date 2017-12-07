@@ -21,9 +21,7 @@ extern "C" {
  */
 typedef struct
 {
-    uint32_t dir;   /**< DIO direction register */
-    uint32_t out;   /**< DIO output value register */
-    uint32_t in;    /**< DIO input value register */
+    uint32_t reg;   /**< DIO register */
     uint8_t bit;    /**< Bit in the register to modify */
 } MyRio_Dio;
 

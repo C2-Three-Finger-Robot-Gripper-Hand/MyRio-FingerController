@@ -59,12 +59,13 @@ void MotorController::calibrate() {
 	this->motor->forwards();
 	this->motor->enable();
 
+	printf("Going to switch 2\n");
 	while(!this->end_switch_2->hasReachedLimit()) {
 		usleep(1000);
 	}
 	this->motor->disable();
-//	printf("encoder value: %d\n", this->encoder->readSteps());
-//	printf("Reached endswitch 2\n");
+	printf("encoder value: %d\n", this->encoder->readSteps());
+	printf("Reached endswitch 2\n");
 
 	this->encoder->resetSteps();
 
@@ -75,10 +76,14 @@ void MotorController::calibrate() {
 	while(!this->end_switch_1->hasReachedLimit()) {
 		usleep(1000);
 	}
+	printf("encoder value: %d\n", this->encoder->readSteps());
+	printf("Reached endswitch 1\n");
+
 	this->motor->disable();
 	this->maxSteps = this->encoder->readSteps();
 	this->isCalibrated = NiFpga_True;
 	this->setMotorPosition(MOTOR_POSITION_MAX/2);
+	printf("Max steps: %d\n", this->maxSteps);
 }
 
 void MotorController::setMotorPosition(double degree) {

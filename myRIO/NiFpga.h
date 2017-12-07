@@ -1,7 +1,7 @@
 /*
- * FPGA Interface C API 13.0 header file.
+ * FPGA Interface C API 15.0 header file.
  *
- * Copyright (c) 2013,
+ * Copyright (c) 2015,
  * National Instruments Corporation.
  * All rights reserved.
  */
@@ -52,6 +52,8 @@
       || defined(linux) \
       || defined(__gnu_linux__)
       #define NiFpga_Linux 1
+   #elif defined(__APPLE__) && defined(__MACH__)
+      #define NiFpga_MacOsX 1
    #else
       #error Unsupported OS.
    #endif
@@ -76,12 +78,12 @@
    || defined(_ARM) \
    || defined(_M_ARM) \
    || defined(_M_ARMT)
-   #if defined(__linux__) \
-    || defined(__linux) \
-    || defined(linux) \
-    || defined(__gnu_linux__)
-      #define NiFpga_Linux 1
-   #else
+#if defined(__linux__) \
+ || defined(__linux) \
+ || defined(linux) \
+ || defined(__gnu_linux__)
+   #define NiFpga_Linux 1
+#else
       #error Unsupported OS.
    #endif
 #else
@@ -136,7 +138,7 @@
  */
 #if NiFpga_Cpp || NiFpga_C99
    /* The inline keyword exists in C++ and C99. */
-   #define NiFpga_Inline inline
+#define NiFpga_Inline inline
 #elif NiFpga_Msvc
    /* Visual C++ (at least since 6.0) also supports an alternate keyword. */
    #define NiFpga_Inline __inline
@@ -239,6 +241,12 @@ static const NiFpga_Status NiFpga_Status_Success = 0;
 static const NiFpga_Status NiFpga_Status_FifoTimeout = -50400;
 
 /**
+ * No transfer is in progress because the transfer was aborted by the client.
+ * The operation could not be completed as specified.
+ */
+static const NiFpga_Status NiFpga_Status_TransferAborted = -50405;
+
+/**
  * A memory allocation failed. Try again after rebooting.
  */
 static const NiFpga_Status NiFpga_Status_MemoryFull = -52000;
@@ -266,6 +274,12 @@ static const NiFpga_Status NiFpga_Status_ResourceNotFound = -52006;
  * reserved.
  */
 static const NiFpga_Status NiFpga_Status_ResourceNotInitialized = -52010;
+
+/**
+ * A hardware failure has occurred. The operation could not be completed as
+ * specified.
+ */
+static const NiFpga_Status NiFpga_Status_HardwareFault = -52018;
 
 /**
  * The FPGA is already running.
@@ -418,6 +432,13 @@ static const NiFpga_Status NiFpga_Status_GatedClockHandshakingViolation = -61216
 static const NiFpga_Status NiFpga_Status_ElementsNotPermissibleToBeAcquired = -61219;
 
 /**
+ * The operation could not be performed because the FPGA is in configuration or
+ * discovery mode. Wait for configuration or discovery to complete and retry
+ * your operation.
+ */
+static const NiFpga_Status NiFpga_Status_FpgaBusyConfiguration = -61252;
+
+/**
  * An unexpected internal error occurred.
  */
 static const NiFpga_Status NiFpga_Status_InternalError = -61499;
@@ -500,10 +521,12 @@ static const NiFpga_Status NiFpga_Status_BitfileReadError = -63101;
 static const NiFpga_Status NiFpga_Status_SignatureMismatch = -63106;
 
 /**
- * The bitfile you are trying to use is not compatible with the version of
- * NI-RIO installed on the target and/or the host. Determine which versions of
- * NI-RIO and LabVIEW were used to make the bitfile, update the software on the
- * target and host to that version or later, and try again.
+ * The bitfile you are trying to use is incompatible with the version
+ * of NI-RIO installed on the target and/or host. Update the version
+ * of NI-RIO on the target and/or host to the same version (or later)
+ * used to compile the bitfile. Alternatively, recompile the bitfile
+ * with the same version of NI-RIO that is currently installed on the
+ * target and/or host.
  */
 static const NiFpga_Status NiFpga_Status_IncompatibleBitfile = -63107;
 
@@ -544,7 +567,7 @@ static const NiFpga_Status NiFpga_Status_OutOfHandles = -63198;
  */
 static NiFpga_Inline NiFpga_Bool NiFpga_IsError(const NiFpga_Status status)
 {
-   return status < NiFpga_Status_Success;
+   return status < NiFpga_Status_Success ? NiFpga_True : NiFpga_False;
 }
 
 /**
@@ -555,7 +578,7 @@ static NiFpga_Inline NiFpga_Bool NiFpga_IsError(const NiFpga_Status status)
  */
 static NiFpga_Inline NiFpga_Bool NiFpga_IsNotError(const NiFpga_Status status)
 {
-   return status >= NiFpga_Status_Success;
+   return status >= NiFpga_Status_Success ? NiFpga_True : NiFpga_False;
 }
 
 /**
@@ -570,8 +593,8 @@ static NiFpga_Inline NiFpga_Bool NiFpga_IsNotError(const NiFpga_Status status)
  * @return the resulting status
  */
 static NiFpga_Inline NiFpga_Status NiFpga_MergeStatus(
-                                                NiFpga_Status* const status,
-                                                const NiFpga_Status  newStatus)
+                                               NiFpga_Status* const status,
+                                               const NiFpga_Status  newStatus)
 {
    if (!status)
       return NiFpga_Status_InvalidParameter;
@@ -1325,9 +1348,10 @@ static const uint32_t NiFpga_InfiniteTimeout = 0xFFFFFFFF;
 typedef void* NiFpga_IrqContext;
 
 /**
- * IRQ contexts are single-threaded; only one thread can wait with a particular
- * context at any given time. Clients must reserve as many contexts as the
- * application requires.
+ * IRQ contexts are single-threaded; only one thread can wait with a
+ * particular context at any given time. To minimize jitter when first
+ * waiting on IRQs, reserve as many contexts as the application
+ * requires.
  *
  * If a context is successfully reserved (the returned status is not an error),
  * it must be unreserved later. Otherwise a memory leak will occur.
@@ -1350,11 +1374,11 @@ NiFpga_Status NiFpga_UnreserveIrqContext(NiFpga_Session    session,
                                          NiFpga_IrqContext context);
 
 /**
- * This is a blocking function that stops the calling thread until the FPGA
- * asserts any IRQ in the irqs parameter, or until the function call times out.
- * Before calling this function, you must use NiFpga_ReserveIrqContext to
- * reserve an IRQ context. No other threads can use the same context when this
- * function is called.
+ * This is a blocking function that stops the calling thread until the
+ * FPGA asserts any IRQ in the irqs parameter, or until the function
+ * call times out.  Before calling this function, use
+ * NiFpga_ReserveIrqContext to reserve an IRQ context. No other
+ * threads can use the same context when this function is called.
  *
  * You can use the irqsAsserted parameter to determine which IRQs were asserted
  * for each function call.
