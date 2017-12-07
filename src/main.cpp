@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include "MyRio.h"
 #include "FingerController.h"
-#include "NiFpga_MyRio1900Fpga20.h"
+#include "NiFpga_FPGAMainDefault.h"
 #include <exception>
 #include <signal.h>
 #include <stdlib.h>

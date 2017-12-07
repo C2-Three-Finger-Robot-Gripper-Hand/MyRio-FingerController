@@ -11,14 +11,14 @@
 #include "Encoder.h"
 #include "MyRio.h"
 
-extern NiFpga_Session myrio_session;
+//extern NiFpga_Session myrio_session;
 
 
 RotaryEncoder::RotaryEncoder(const Encoder_Config *encoder_config){
 	this->steps = 0;
 	this->direction = Incrementing;
 	this->encoder = encoder_config->encoder;
-	uint8_t selectReg;
+//	uint8_t selectReg;
 
 	/*
 	 * Encoder inputs are on pins shared with other onboard devices. To input
@@ -27,18 +27,18 @@ RotaryEncoder::RotaryEncoder(const Encoder_Config *encoder_config){
 	 *
 	 * Read the value of the SYSSELECTB register.
 	 */
-	NiFpga_ReadU8(myrio_session, encoder_config->indicator, &selectReg);
+//	NiFpga_ReadU8(myrio_session, encoder_config->indicator, &selectReg);
 
 	/*
 	 * Set bit 5 of the SYSSELECTB register to enable ENCB functionality.
 	 * The functionality of these bits is specified in the documentation.
 	 */
-	selectReg = selectReg | (1 << encoder_config->indicator_enable_bit);
+//	selectReg = selectReg | (1 << encoder_config->indicator_enable_bit);
 
 	/*
 	 * Write the updated value of the SYSSELECTB register.
 	 */
-	NiFpga_WriteU8(myrio_session, encoder_config->indicator, selectReg);
+//	NiFpga_WriteU8(myrio_session, encoder_config->indicator, selectReg);
 
 	/*
 	 * Enable the encoder and configure to read step and direction signals.
