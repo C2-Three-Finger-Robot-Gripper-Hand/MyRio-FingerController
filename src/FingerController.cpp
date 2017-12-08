@@ -51,8 +51,8 @@ void FingerController::run(){
 
 	for(;;){
 		mc->run();
-		motor_controller3->run();
+		motor_controller1->run();
 
-		usleep(1000000 / TICKS_PER_SECOND);
+		//usleep(1000000 / TICKS_PER_SECOND - VisaDefaultTimeout * 1000);
 	}
 }

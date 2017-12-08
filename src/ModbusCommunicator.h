@@ -37,7 +37,7 @@ private:
 	MyRio_Dio writePin;
 	FingerController *fingerController;
 
-	double *holdingRegisters[NUMBER_OF_HOLDING_REGISTERS];
+	int *holdingRegisters[NUMBER_OF_HOLDING_REGISTERS];
 	WriteRegisterPointer writingRegisters[NUMBER_OF_WRITE_REGISTERS];
 
 	char message[254] = {0};

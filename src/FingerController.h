@@ -11,7 +11,7 @@
 
 #include "UART.h"
 
-#define TICKS_PER_SECOND 1000/VisaDefaultTimeout
+#define TICKS_PER_SECOND 100
 
 #include "Encoder.h"
 #include "RotaryEncoder.h"

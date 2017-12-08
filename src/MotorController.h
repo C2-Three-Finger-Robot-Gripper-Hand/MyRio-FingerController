@@ -36,14 +36,13 @@ public:
 	RotaryEncoder* encoder;
 	LimitSwitch* end_switch_1;
 	LimitSwitch* end_switch_2;
-	double motorPosition;
 
 	void run();
 	void calibrate();
 	void setState(MotorControllerState state);
 	void setMotorPosition(double degree);
 	double requestedMotorPosition;
-	double currentMotorPosition;
+	int currentMotorPosition;
 private:
 	MotorControllerState currentState;
 	uint32_t maxSteps;

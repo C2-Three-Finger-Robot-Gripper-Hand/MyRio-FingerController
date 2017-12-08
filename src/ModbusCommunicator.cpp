@@ -24,9 +24,9 @@ ModbusCommunicator::ModbusCommunicator(FingerController *fingerController){
     /*
      * Initialize holding register references
      */
-	holdingRegisters[0] = &this->fingerController->motor_controller1->motorPosition;
-	holdingRegisters[1] = &this->fingerController->motor_controller2->motorPosition;
-	holdingRegisters[2] = &this->fingerController->motor_controller3->motorPosition;
+	holdingRegisters[0] = &this->fingerController->motor_controller1->currentMotorPosition;
+	holdingRegisters[1] = &this->fingerController->motor_controller2->currentMotorPosition;
+	holdingRegisters[2] = &this->fingerController->motor_controller3->currentMotorPosition;
 
     /*
      * Initialize writing register references
@@ -132,8 +132,9 @@ void ModbusCommunicator::readHoldingRegister(char *message, int length){
     for(int i = 0; i < registerQuantity; i++){
     	int registerNumber = startAdress + i;
     	if(registerNumber < NUMBER_OF_HOLDING_REGISTERS){
-        	printf("Register value: %d\n",  (int)holdingRegisters[registerNumber]);
-            sprintf(&data[4 + i * 4], "%04x", (int)holdingRegisters[registerNumber]);				// Register value
+    		//int value = holdingRegisters[registerNumber];
+        	printf("Register value: %d\n",  *holdingRegisters[registerNumber]);
+            sprintf(&data[4 + i * 4], "%04x", *holdingRegisters[registerNumber]);				// Register value
     	}
     }
 
