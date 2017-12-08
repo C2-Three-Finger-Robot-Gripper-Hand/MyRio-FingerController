@@ -36,6 +36,7 @@ public:
 	RotaryEncoder* encoder;
 	LimitSwitch* end_switch_1;
 	LimitSwitch* end_switch_2;
+	double motorPosition;
 
 	void run();
 	void calibrate();

@@ -40,19 +40,20 @@ void MotorController::run(){
 
 		uint32_t currentSteps = encoder->readSteps();
 		//calculate motor speed to reach request motor position
-        double motorSpeed = motorPid->calculate(requestedMotorPositionInStep/10, (int)currentSteps/10);
+    double motorSpeed = motorPid->calculate(requestedMotorPositionInStep/10, (int)currentSteps/10);
 
-        //calculate current motor position in degree
-        this->currentMotorPosition = MOTOR_POSITION_MAX * currentSteps / (double)this->maxSteps;
+    //calculate current motor position in degree
+    this->currentMotorPosition = MOTOR_POSITION_MAX * currentSteps / (double)this->maxSteps;
 
-//        printf("Speed: %f Current Steps: %zu Requested position step: %f Motor position(degree)%f\n", motorSpeed, currentSteps, requestedMotorPositionInStep, this->currentMotorPosition);
-        if(motorSpeed >= 0){
-        	motor->set_speed(motorSpeed);
-        	motor->backwards();
-        }else{
-        	motor->set_speed(-1*motorSpeed);
-        	motor->forwards();
-        }
+//  printf("Speed: %f Current Steps: %zu Requested position step: %f Motor position(degree)%f\n", motorSpeed, currentSteps, requestedMotorPositionInStep, this->currentMotorPosition);
+
+    if(motorSpeed >= 0){
+      motor->set_speed(motorSpeed);
+      motor->backwards();
+    }else{
+      motor->set_speed(-1*motorSpeed);
+      motor->forwards();
+    }
 	}else if(currentState == calibrating){
 
 	}
@@ -106,7 +107,3 @@ MotorController::~MotorController(){
     this->motor->backwards();
     this->motor->set_speed(0);
 }
-
-
-
-

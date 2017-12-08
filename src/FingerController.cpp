@@ -12,10 +12,12 @@
 #include "RotaryEncoder.h"
 #include "LimitSwitch.h"
 #include <unistd.h>
+#include "ModbusCommunicator.h"
 
 FingerController::FingerController(){
 	printf("Projectgroep C2 - Finger controller");
 	printf("\n");
+
 
 	motor_controller1 = new MotorController(&MOTOR1_CONFIG, &MOTOR1_ENCODER_CONFIG,
 			&MOTOR1_END_SWITCH1_CONFIG, &MOTOR1_END_SWITCH2_CONFIG);
@@ -25,6 +27,7 @@ FingerController::FingerController(){
 //
 	motor_controller3 = new MotorController(&MOTOR3_CONFIG, &MOTOR3_ENCODER_CONFIG,
 					&MOTOR1_END_SWITCH1_CONFIG, &MOTOR1_END_SWITCH2_CONFIG);
+
 
 	printf("Setup done \n");
 }
@@ -39,14 +42,16 @@ void FingerController::run(){
 	printf("Start running\n");
 	printf("Start kalibratie\n");
 
-	motor_controller1->calibrate();
-//	motor_controller1->setMotorPosition(0.0);
+	ModbusCommunicator *mc = new ModbusCommunicator(this);
+
+  motor_controller1->calibrate();
+//	motor_controller3->setMotorPosition(0.0);
 
 	motor_controller1->setState(running);
 
 	for(;;){
-//		printf("Switch1: %d, switch2: %d\n", motor_controller1->end_switch_1->hasReachedLimit(), motor_controller1->end_switch_2->hasReachedLimit());
-		motor_controller1->run();
+		mc->run();
+		motor_controller3->run();
 
 		usleep(1000000 / TICKS_PER_SECOND);
 	}

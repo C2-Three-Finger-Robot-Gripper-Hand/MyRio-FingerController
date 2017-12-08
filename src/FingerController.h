@@ -9,7 +9,9 @@
 #ifndef FINGERCONTROLLER_H_
 #define FINGERCONTROLLER_H_
 
-#define TICKS_PER_SECOND 100
+#include "UART.h"
+
+#define TICKS_PER_SECOND 1000/VisaDefaultTimeout
 
 #include "Encoder.h"
 #include "RotaryEncoder.h"
@@ -77,7 +79,7 @@ public:
 	~ FingerController();
 
 	void run();
-private:
+
 	MotorController *motor_controller1;
 	MotorController *motor_controller2;
 	MotorController *motor_controller3;
