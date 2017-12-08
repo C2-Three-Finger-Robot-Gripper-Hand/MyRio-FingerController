@@ -22,45 +22,54 @@
 
 /*Rotary encoder configs*/
 const Encoder_Config MOTOR1_ENCODER_CONFIG = {
-	{ENCBCNFG, ENCBSTAT, ENCBCNTR},
-	SYSSELECTB,
-	5
+	{   NiFpga_FPGAMainDefault_ControlU8_ENC1CNFG,
+		NiFpga_FPGAMainDefault_IndicatorU8_ENC1STAT,
+		NiFpga_FPGAMainDefault_IndicatorU32_ENC1CNTR
+	}
 };
 
 const Encoder_Config MOTOR2_ENCODER_CONFIG = {
-	{ENCACNFG, ENCASTAT, ENCACNTR},
-	SYSSELECTA,
-	5
+	{   NiFpga_FPGAMainDefault_ControlU8_ENC2CNFG,
+		NiFpga_FPGAMainDefault_IndicatorU8_ENC2STAT,
+		NiFpga_FPGAMainDefault_IndicatorU32_ENC2CNTR
+	}
 };
 
 const Encoder_Config MOTOR3_ENCODER_CONFIG = {
-	{ENCC_0CNFG, ENCC_0STAT, ENCC_0CNTR},
-	SYSSELECTC,
-	0
+	{   NiFpga_FPGAMainDefault_ControlU8_ENC3CNFG,
+		NiFpga_FPGAMainDefault_IndicatorU8_ENC3STAT,
+		NiFpga_FPGAMainDefault_IndicatorU32_ENC3CNTR
+	}
 };
 
 /*Motor configs*/
 const Motor_Config MOTOR1_CONFIG = {
-		{DIOB_70DIR, DIOB_70OUT, DIOB_70IN, 0},
-		{DIOB_70DIR, DIOB_70OUT, DIOB_70IN, 1},
-		{AOB_0VAL, AOB_0WGHT, AOB_0OFST, AOSYSGO, NiFpga_True}
+	{NiFpga_FPGAMainDefault_ControlU8_DIOB_30OUT1, 0},
+	{NiFpga_FPGAMainDefault_ControlU8_DIOB_30OUT1, 1},
+	{NiFpga_FPGAMainDefault_ControlU16_AOB_0VAL, AOB_0WGHT, AOB_0OFST}
 };
-
+//
 const Motor_Config MOTOR2_CONFIG = {
-		{DIOB_70DIR, DIOB_70OUT, DIOB_70IN, 2},
-		{DIOB_70DIR, DIOB_70OUT, DIOB_70IN, 3},
-		{AOB_1VAL, AOB_1WGHT, AOB_1OFST, AOSYSGO, NiFpga_True}
+	{NiFpga_FPGAMainDefault_ControlU8_DIOB_30OUT1, 2},
+	{NiFpga_FPGAMainDefault_ControlU8_DIOB_30OUT1, 3},
+	{NiFpga_FPGAMainDefault_ControlU16_AOB_1VAL, AOB_1WGHT, AOB_1OFST}
 };
 
 const Motor_Config MOTOR3_CONFIG = {
-		{DIOB_70DIR, DIOB_70OUT, DIOB_70IN, 4},
-		{DIOB_70DIR, DIOB_70OUT, DIOB_70IN, 5},
-		{AOA_0VAL, AOA_0WGHT, AOA_0OFST, AOSYSGO, NiFpga_True}
+	{NiFpga_FPGAMainDefault_ControlU8_DIOB_30OUT2, 0},
+	{NiFpga_FPGAMainDefault_ControlU8_DIOB_30OUT2, 1},
+	{NiFpga_FPGAMainDefault_ControlU16_AOA_0VAL, AOA_0WGHT, AOA_0OFST}
 };
 
 /*Limitswitch configs*/
-const LimitSwitch_Config MOTOR3_END_SWITCH1_CONFIG = {{DIOB_70DIR, DIOB_70OUT, DIOB_70IN, 6}};
-const LimitSwitch_Config MOTOR3_END_SWITCH2_CONFIG = {{DIOB_70DIR, DIOB_70OUT, DIOB_70IN, 7}};
+const LimitSwitch_Config MOTOR1_END_SWITCH1_CONFIG = {{NiFpga_FPGAMainDefault_IndicatorU8_DIOB_30IN1,0}};
+const LimitSwitch_Config MOTOR1_END_SWITCH2_CONFIG = {{NiFpga_FPGAMainDefault_IndicatorU8_DIOB_30IN1,1}};
+
+const LimitSwitch_Config MOTOR2_END_SWITCH1_CONFIG = {{NiFpga_FPGAMainDefault_IndicatorU8_DIOB_30IN1,2}};
+const LimitSwitch_Config MOTOR2_END_SWITCH2_CONFIG = {{NiFpga_FPGAMainDefault_IndicatorU8_DIOB_30IN1,3}};
+
+const LimitSwitch_Config MOTOR3_END_SWITCH1_CONFIG = {{NiFpga_FPGAMainDefault_IndicatorU8_DIOB_30IN2,0}};
+const LimitSwitch_Config MOTOR3_END_SWITCH2_CONFIG = {{NiFpga_FPGAMainDefault_IndicatorU8_DIOB_30IN2,1}};
 
 class FingerController {
 public:

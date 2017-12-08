@@ -27,8 +27,8 @@ typedef struct
     uint32_t val;           /**< AIO value register */
     uint32_t wght;          /**< AIO weight constant value */
     uint32_t ofst;          /**< AIO offset constant value */
-    uint32_t set;           /**< AO set register, unused for AI */
-    NiFpga_Bool is_signed;  /**< Is the AIO signed */
+//    uint32_t set;           /**< AO set register, unused for AI */
+//    NiFpga_Bool is_signed;  /**< Is the AIO signed */
     double scale_weight;    /**< AIO weight scaled value */
     double scale_offset;    /**< AIO offset scaled value */
 } MyRio_Aio;
