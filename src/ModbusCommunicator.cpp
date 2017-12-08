@@ -5,31 +5,36 @@
  *      Author: Project team C2
  */
 
-#include "ModbusCommunicator.h"
-#include "string.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "DIO.h"
 #include <unistd.h>
 #include <pthread.h>
 
-int convert_slice(const char *s, size_t a, size_t b) {
-	char tmp[b - a + 1];
-	strncpy(tmp, s+a, b-a);
-	tmp[b-a] = '\0';
-    return (int)strtol(tmp, NULL, 16);
-}
+#include "ModbusCommunicator.h"
+#include "string.h"
+#include "DIO.h"
+#include "MotorController.h"
 
 ModbusCommunicator::ModbusCommunicator(FingerController *fingerController){
     this->fingerController = fingerController;
+	this->writePin = {NiFpga_FPGAMainDefault_ControlU8_DIOB_30OUT2, 2};
 
-	this->writePin = {DIOA_70DIR, DIOA_70OUT, DIOA_70IN, 0};
-
+    /*
+     * Initialize holding register references
+     */
 	holdingRegisters[0] = &this->fingerController->motor_controller1->motorPosition;
 	holdingRegisters[1] = &this->fingerController->motor_controller2->motorPosition;
 	holdingRegisters[2] = &this->fingerController->motor_controller3->motorPosition;
 
+    /*
+     * Initialize writing register references
+     */
+	using namespace std::placeholders;
+	writingRegisters[0] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
+	writingRegisters[1] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
+	writingRegisters[2] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
 
     /*;
      * Initialize the UART port structure.
@@ -91,12 +96,17 @@ void ModbusCommunicator::writeHoldingRegister(char *message, int length){
 	int registerQuantity = convert_slice(message, 8, 12);
 	int dataLength = convert_slice(message, 12, 14) * 2;
 
-	printf("Write holding registor from %d and a number of %d \n", startAdress, registerQuantity);
+	printf("Write holding register from %d and a number of %d with a datalength of %d \n", startAdress, registerQuantity, dataLength);
 
-//    for(int i = 0; i < registerQuantity; i++){
-//    	int data = convert_slice(message, 14 + );
-//    	printf("Register value: %d\n",  holdingRegisters[startAdress + i]);
-//    }
+	//Writing to registers
+    for(int i = 0; i < registerQuantity; i++){
+    	int registerNumber = startAdress + i;
+    	if(registerNumber < NUMBER_OF_WRITE_REGISTERS){
+        	int value = convert_slice(message, 14 + i * 4, 18 + i * 4);
+        	printf("Writing to register %d value: %d\n", registerNumber, value);
+        	writingRegisters[registerNumber]((double)value);
+    	}
+    }
 
 	char data[10];
 	data[0] = '1';								//Function code
@@ -120,8 +130,11 @@ void ModbusCommunicator::readHoldingRegister(char *message, int length){
 	data[1] = '3';								//Function code
     sprintf(&data[2], "%02x", registerQuantity * 2);	//Byte count
     for(int i = 0; i < registerQuantity; i++){
-    	printf("Register value: %d\n",  holdingRegisters[startAdress + i]);
-        sprintf(&data[4 + i * 4], "%04x", holdingRegisters[startAdress + i]);				// Register value
+    	int registerNumber = startAdress + i;
+    	if(registerNumber < NUMBER_OF_HOLDING_REGISTERS){
+        	printf("Register value: %d\n",  (int)holdingRegisters[registerNumber]);
+            sprintf(&data[4 + i * 4], "%04x", (int)holdingRegisters[registerNumber]);				// Register value
+    	}
     }
 
     sendData(data, dataLength);
@@ -153,6 +166,21 @@ void ModbusCommunicator::sendData(char *data, int length){
     enableRX();
 }
 
+
+
+void ModbusCommunicator::enableRX(){
+    Dio_WriteBit(&writePin, NiFpga_False);
+}
+
+void ModbusCommunicator::enableTX(){
+    Dio_WriteBit(&writePin, NiFpga_True);
+}
+
+
+//**
+// Helper functions
+//**
+
 short ModbusCommunicator::calculateLRC(char *message, int start, int end){
 	int lrc = 0;
 	int fctr = 16;
@@ -171,12 +199,9 @@ short ModbusCommunicator::calculateLRC(char *message, int start, int end){
 	return lrc;
 }
 
-void ModbusCommunicator::enableRX(){
-    Dio_WriteBit(&writePin, NiFpga_False);
+int ModbusCommunicator::convert_slice(const char *s, size_t a, size_t b){
+	char tmp[b - a + 1];
+	strncpy(tmp, s+a, b-a);
+	tmp[b-a] = '\0';
+    return (int)strtol(tmp, NULL, 16);
 }
-
-void ModbusCommunicator::enableTX(){
-    Dio_WriteBit(&writePin, NiFpga_True);
-}
-
-

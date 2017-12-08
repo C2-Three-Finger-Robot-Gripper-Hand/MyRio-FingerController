@@ -29,7 +29,6 @@ FingerController::FingerController(){
 					&MOTOR1_END_SWITCH1_CONFIG, &MOTOR1_END_SWITCH2_CONFIG);
 
 
-	ModbusCommunicator::start_thread(this);
 	printf("Setup done \n");
 }
 

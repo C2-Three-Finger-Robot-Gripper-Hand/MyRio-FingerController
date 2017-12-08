@@ -8,6 +8,7 @@
 
 #include "UART.h"
 #include "visa.h"
+#include <String.h>
 
 /**
  * Opens a UART session on an VISA implemented port.

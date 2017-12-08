@@ -10,39 +10,42 @@
 
 #include <stdio.h>
 #include <time.h>
+#include <pthread.h>
+#include <functional>
+
 #include "UART.h"
 #include "DIO.h"
 #include "FingerController.h"
-#include <pthread.h>
 
 #define BaudRate 19200
 #define DataBit 8
 
 #define SlaveAdress 1
 
+#define NUMBER_OF_HOLDING_REGISTERS 3
+#define NUMBER_OF_WRITE_REGISTERS 3
+typedef std::function<void(double)> WriteRegisterPointer;
+
+
 class ModbusCommunicator{
 public:
 	ModbusCommunicator(FingerController *fingerController);
     void run();
-    void start_thread();
 
-    static void start_thread(FingerController *fingerController){
-        pthread_t t;
-        pthread_create(&t, NULL, &ModbusCommunicator::start_modbus, fingerController);
-    }
-
-    static void *start_modbus(void *context){
-        FingerController *fc = (FingerController *)context;
-    	ModbusCommunicator *mc = new ModbusCommunicator(fc);
-    	mc->run();
-    }
-
+private:
     MyRio_Uart uart;
 	MyRio_Dio writePin;
 	FingerController *fingerController;
 
+	double *holdingRegisters[NUMBER_OF_HOLDING_REGISTERS];
+	WriteRegisterPointer writingRegisters[NUMBER_OF_WRITE_REGISTERS];
+
+	char message[254] = {0};
+    int position = 0;
+	char buf[254];
+
+
     void parseMessage(char *message, int length);
-    static short calculateLRC(char *message, int start, int end);
     void readHoldingRegister(char *message, int length);
     void writeHoldingRegister(char *message, int length);
     void sendData(char *data, int length);
@@ -50,11 +53,10 @@ public:
     void enableTX();
     void enableRX();
 
-	double *holdingRegisters[3];
 
-	char message[254] = {0};
-    int position = 0;
-	char buf[254];
+	//Helper functions
+    static short calculateLRC(char *message, int start, int end);
+    static int convert_slice(const char *s, size_t a, size_t b);
 };
 
 #endif /* I2CCOMMUNICATOR_H_ */
