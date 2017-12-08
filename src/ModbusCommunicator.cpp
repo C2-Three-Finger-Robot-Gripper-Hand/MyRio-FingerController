@@ -27,6 +27,7 @@ ModbusCommunicator::ModbusCommunicator(FingerController *fingerController){
 	holdingRegisters[0] = &this->fingerController->motor_controller1->currentMotorPosition;
 	holdingRegisters[1] = &this->fingerController->motor_controller2->currentMotorPosition;
 	holdingRegisters[2] = &this->fingerController->motor_controller3->currentMotorPosition;
+	holdingRegisters[3] = &this->fingerController->mode;
 
     /*
      * Initialize writing register references
@@ -35,6 +36,7 @@ ModbusCommunicator::ModbusCommunicator(FingerController *fingerController){
 	writingRegisters[0] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
 	writingRegisters[1] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
 	writingRegisters[2] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
+	writingRegisters[3] = std::bind(&FingerController::set_controller_mode, this->fingerController, _1);
 
     /*;
      * Initialize the UART port structure.

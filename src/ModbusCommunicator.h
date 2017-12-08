@@ -22,8 +22,8 @@
 
 #define SlaveAdress 1
 
-#define NUMBER_OF_HOLDING_REGISTERS 3
-#define NUMBER_OF_WRITE_REGISTERS 3
+#define NUMBER_OF_HOLDING_REGISTERS 4
+#define NUMBER_OF_WRITE_REGISTERS 4
 typedef std::function<void(double)> WriteRegisterPointer;
 
 
