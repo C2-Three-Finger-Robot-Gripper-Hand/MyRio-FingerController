@@ -44,10 +44,10 @@ void FingerController::run(){
 
 	ModbusCommunicator *mc = new ModbusCommunicator(this);
 
-	//motor_controller3->calibrate();
+  motor_controller1->calibrate();
 //	motor_controller3->setMotorPosition(0.0);
 
-	motor_controller3->setState(running);
+	motor_controller1->setState(running);
 
 	for(;;){
 		mc->run();
