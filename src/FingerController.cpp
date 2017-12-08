@@ -39,14 +39,14 @@ void FingerController::run(){
 	printf("Start running\n");
 	printf("Start kalibratie\n");
 
-	motor_controller3->calibrate();
+	motor_controller1->calibrate();
 //	motor_controller1->setMotorPosition(0.0);
 
-	motor_controller3->setState(running);
+	motor_controller1->setState(running);
 
 	for(;;){
 //		printf("Switch1: %d, switch2: %d\n", motor_controller1->end_switch_1->hasReachedLimit(), motor_controller1->end_switch_2->hasReachedLimit());
-		motor_controller3->run();
+		motor_controller1->run();
 
 		usleep(1000000 / TICKS_PER_SECOND);
 	}

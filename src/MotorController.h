@@ -41,11 +41,12 @@ public:
 	void calibrate();
 	void setState(MotorControllerState state);
 	void setMotorPosition(double degree);
+	double requestedMotorPosition;
+	double currentMotorPosition;
 private:
 	MotorControllerState currentState;
 	uint32_t maxSteps;
 	NiFpga_Bool isCalibrated;
-	double motorPosition;
 };
 
 #endif /* MOTORCONTROLLER_H_ */
