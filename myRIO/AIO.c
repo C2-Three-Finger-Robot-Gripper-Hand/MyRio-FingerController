@@ -56,34 +56,6 @@ void Aio_Write(MyRio_Aio* channel, double value)
     NiFpga_Status status;
     uint16_t valueScaled;
 
-//    /*
-//     * The value is always stored in an unsigned 16-bit register. For a signed
-//     * channel, cast this value directly to a signed 16-bit value. Bound the
-//     * values to their respective limits.
-//     */
-//    if (channel->is_signed)
-//    {
-//        /*
-//         * Scale the voltage value to the raw value.
-//         */
-//        value = (value - channel->scale_offset) / channel->scale_weight;
-//        value = (value < INT16_MIN) ? INT16_MIN : value;
-//        value = (value > INT16_MAX) ? INT16_MAX : value;
-//
-//        /*
-//         * Round the scaled value to the nearest integer.
-//         */
-//        value += (value < 0.0) ? -0.5 : 0.5;
-//
-//        /*
-//         * Convert the scaled value to an unsigned integer.
-//         */
-//        valueScaled = (uint16_t)((int16_t)(value));
-//    }
-//    else
-//    {
-//
-//    }
 
     value = (value - channel->scale_offset) / channel->scale_weight + 0.5;
 	value = (value < 0) ? 0 : value;
@@ -105,12 +77,6 @@ void Aio_Write(MyRio_Aio* channel, double value)
     MyRio_ReturnIfNotSuccess(status,
             "Could not write to the AO value registers!");
 
-    /*
-     * Write the signal so that the FPGA will apply the new value.
-     *
-     * The returned NiFpga_Status value is stored for error checking.
-     */
-//    status = NiFpga_WriteU16(myrio_session, channel->set, 1);
 
     /*
      * Check if there was an error writing to the set register.

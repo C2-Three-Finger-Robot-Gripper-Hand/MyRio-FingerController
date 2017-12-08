@@ -12,10 +12,10 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#include "MotorController.h"
 #include "ModbusCommunicator.h"
 #include "string.h"
 #include "DIO.h"
-#include "MotorController.h"
 
 ModbusCommunicator::ModbusCommunicator(FingerController *fingerController){
     this->fingerController = fingerController;
@@ -152,13 +152,14 @@ void ModbusCommunicator::sendData(char *data, int length){
     sprintf(&message[3+length], "%02x", calculateLRC(message, 1, length+3));	//LRC
     message[3+length+2] = '\r';					//End char
     message[3+length+3] = '\n';					//End char
-    printf("Sending message: %s \n", message);
 
+    printf("Sending message: ");
     uint8_t message_uint8[msgLength];
-
-    for(int i = 0; i < msgLength; i++){
+    for(int i = 0; i < msgLength ; i++){
+        printf("%c", message[i]);
     	message_uint8[i] = message[i];
     }
+    printf("\n");
 
     enableTX();
 

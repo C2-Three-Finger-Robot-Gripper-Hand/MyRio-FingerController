@@ -5,26 +5,21 @@
  *      Author: Project team C2
  */
 
-#include "FingerController.h"
 #include <stdio.h>
-#include "DIO.h"
-#include "AIO.h"
-#include "RotaryEncoder.h"
-#include "LimitSwitch.h"
-#include <unistd.h>
+
+#include "FingerController.h"
 #include "ModbusCommunicator.h"
 
 FingerController::FingerController(){
-	printf("Projectgroep C2 - Finger controller");
-	printf("\n");
+	printf("Project C2 - Finger controller \n");
 
 
 	motor_controller1 = new MotorController(&MOTOR1_CONFIG, &MOTOR1_ENCODER_CONFIG,
 			&MOTOR1_END_SWITCH1_CONFIG, &MOTOR1_END_SWITCH2_CONFIG);
-//
+
 	motor_controller2 = new MotorController(&MOTOR2_CONFIG, &MOTOR2_ENCODER_CONFIG,
 				&MOTOR1_END_SWITCH1_CONFIG, &MOTOR1_END_SWITCH2_CONFIG);
-//
+
 	motor_controller3 = new MotorController(&MOTOR3_CONFIG, &MOTOR3_ENCODER_CONFIG,
 					&MOTOR1_END_SWITCH1_CONFIG, &MOTOR1_END_SWITCH2_CONFIG);
 
@@ -39,20 +34,23 @@ FingerController::~FingerController(){
 }
 
 void FingerController::run(){
+	ModbusCommunicator *modbus_controller = new ModbusCommunicator(this);
+
+	printf("Start calibrating\n");
+	motor_controller1->calibrate();
+	//motor_controller2->calibrate();
+	//motor_controller3->calibrate();
+
 	printf("Start running\n");
-	printf("Start kalibratie\n");
-
-	ModbusCommunicator *mc = new ModbusCommunicator(this);
-
-  motor_controller1->calibrate();
-//	motor_controller3->setMotorPosition(0.0);
-
 	motor_controller1->setState(running);
+	//motor_controller2->setState(running);
+	//motor_controller3->setState(running);
 
 	for(;;){
-		mc->run();
-		motor_controller1->run();
+		modbus_controller->run();
 
-		//usleep(1000000 / TICKS_PER_SECOND - VisaDefaultTimeout * 1000);
+		motor_controller1->run();
+		//motor_controller2->run();
+		//motor_controller3->run();
 	}
 }

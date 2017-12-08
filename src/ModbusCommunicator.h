@@ -17,7 +17,7 @@
 #include "DIO.h"
 #include "FingerController.h"
 
-#define BaudRate 19200
+#define BaudRate 115200
 #define DataBit 8
 
 #define SlaveAdress 1

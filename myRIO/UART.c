@@ -151,18 +151,6 @@ int32_t Uart_Close(MyRio_Uart* port)
  * @param[in]   nData   Number of bytes to read
  * @return      int32_t Error/success status
  */
-//int32_t Uart_Read(MyRio_Uart* port, uint8_t* const data,
-//                  const size_t nData)
-//{
-//    int32_t status = VI_SUCCESS;
-//    ViUInt32 numberRead = 0;
-//
-//    status = viRead(port->session, (ViBuf)data, (ViUInt32)nData, &numberRead);
-//
-//    return status;
-//}
-
-
 int32_t Uart_Read(MyRio_Uart* port, char *buf, size_t buf_size, ViUInt32 *read_count){
   memset((void*)buf, (char)0, buf_size);
 

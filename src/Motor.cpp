@@ -6,9 +6,6 @@
  */
 
 #include "Motor.h"
-#include "DIO.h"
-#include "AIO.h"
-#include <stdio.h>
 
 Motor::Motor(const Motor_Config *config){
 	this->enable_pin = config->enable_pin;

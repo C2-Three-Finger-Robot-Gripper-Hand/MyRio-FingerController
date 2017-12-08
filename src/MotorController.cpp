@@ -5,10 +5,11 @@
  *      Author: Project team C2
  */
 
-#include "MotorController.h"
-#include <unistd.h>
-#include "FingerController.h"
 #include <stdio.h>
+#include <unistd.h>
+
+#include "MotorController.h"
+#include "FingerController.h"
 
 MotorController::MotorController(const Motor_Config *motor_config, const Encoder_Config *encoder_config, const LimitSwitch_Config *end_switch_1, const LimitSwitch_Config *end_switch_2){
 	this->motor = new Motor(motor_config);

@@ -65,33 +65,6 @@ void Dio_WriteBit(MyRio_Dio* channel, NiFpga_Bool value)
      */
     status = NiFpga_ReadU8(myrio_session, channel->reg, &outValue);
 
-    /*
-     * Get the value of the direction register.
-     *
-     * NiFpga_MergeStatus is used to propagate any errors from previous
-     * function calls. Errors are not anticipated so error checking is not done
-     * after every NiFpga function call but only at specific points.
-     */
-//    NiFpga_MergeStatus(&status,
-//            NiFpga_ReadU8(myrio_session, channel->dir, &dirValue));
-
-    /*
-     * Check if there was an error reading from the DIO channel registers.
-     *
-     * If there was an error then the rest of the function cannot complete
-     * correctly so print an error message to stdout and return from the
-     * function early.
-     */
-//    MyRio_ReturnIfNotSuccess(status,
-//            "Could not read from the DIO channel registers!")
-
-    /*
-     * Set the appropriate bit in the direction register to turn the channel
-     * into an output. DIO0 = bit0, DIO1 = bit1, etc.
-     *
-     * If the direction of the channel will not change it can be set once.
-     */
-//    dirValue = dirValue | (1 << channel->bit);
 
     /*
      * Clear the value of the appropriate bit in the output register. This is
@@ -112,12 +85,6 @@ void Dio_WriteBit(MyRio_Dio* channel, NiFpga_Bool value)
     NiFpga_MergeStatus(&status,
             NiFpga_WriteU8(myrio_session, channel->reg, outValue));
 
-    /*
-     * Write the new value of the direction register to the device to ensure
-     * that the DIO channel is set as an output channel.
-     */
-//    NiFpga_MergeStatus(&status,
-//            NiFpga_WriteU8(myrio_session, channel->dir, dirValue));
 
     /*
      * Check if there was an error writing to DIO channel registers.
@@ -160,39 +127,6 @@ NiFpga_Bool Dio_ReadBit(MyRio_Dio* channel)
 //    uint8_t dirValue;
     uint8_t inValue;
 //    uint8_t dirMask;
-
-//    /*
-//     * Get the value of the direction register.
-//     *
-//     * The returned NiFpga_Status value is stored for error checking.
-//     */
-//    status = NiFpga_ReadU8(myrio_session, channel->reg, &dirValue);
-//
-//    /*
-//     * Check if there was an error reading from the DIO channel register.
-//     *
-//     * If there was an error then the rest of the function cannot complete
-//     * correctly so print an error message to stdout and return from the
-//     * function early.
-//     */
-//    MyRio_ReturnValueIfNotSuccess(status, NiFpga_False,
-//            "Could not read from the DIO channel direction register!")
-//
-//    /*
-//     * Clear the appropriate bit in the direction register to turn the channel
-//     * into an input. DIO0 = bit0, DIO1 = bit1, etc.
-//     *
-//     * If the direction of the channel will not change it can be set once.
-//     */
-//    dirMask = 1 << channel->bit;  /* Set the bit for the DIO channel */
-//    dirMask = ~dirMask;  /* Invert the values. Bit to change = 0, others = 1 */
-//    dirValue = dirValue & dirMask;  /* Clear only the appropriate bit */
-//
-//    /*
-//     * Write the new value of the direction register to the device to ensure
-//     * that the DIO channel is set as an input channel.
-//     */
-//    status = NiFpga_WriteU8(myrio_session, channel->reg, dirValue);
 
     /*
      * Get the value of the input register.
