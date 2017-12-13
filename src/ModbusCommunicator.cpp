@@ -100,6 +100,14 @@ void ModbusCommunicator::writeHoldingRegister(char *message, int length){
 
 	printf("Write holding register from %d and a number of %d with a datalength of %d \n", startAdress, registerQuantity, dataLength);
 
+	char data[10];
+	data[0] = '1';								//Function code
+	data[1] = '0';								//Function code
+    sprintf(&data[2], "%04x", startAdress);		//Starting address
+    sprintf(&data[6], "%04x", registerQuantity);//Quantity registers
+
+    sendData(data, 10);
+
 	//Writing to registers
     for(int i = 0; i < registerQuantity; i++){
     	int registerNumber = startAdress + i;
@@ -109,14 +117,6 @@ void ModbusCommunicator::writeHoldingRegister(char *message, int length){
         	writingRegisters[registerNumber]((double)value);
     	}
     }
-
-	char data[10];
-	data[0] = '1';								//Function code
-	data[1] = '0';								//Function code
-    sprintf(&data[2], "%04x", startAdress);		//Starting address
-    sprintf(&data[6], "%04x", registerQuantity);//Quantity registers
-
-    sendData(data, 10);
 }
 
 void ModbusCommunicator::readHoldingRegister(char *message, int length){

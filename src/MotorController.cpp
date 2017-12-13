@@ -20,7 +20,7 @@ MotorController::MotorController(const Motor_Config *motor_config, const Encoder
 	this->maxSteps = -1;
 	this->isCalibrated = NiFpga_False;
 	this->currentState = idle;
-	this->requestedMotorPosition = MOTOR_POSITION_MAX / 2;
+	this->requestedMotorPosition = 0;
 	this->currentMotorPosition = 0;
 }
 
