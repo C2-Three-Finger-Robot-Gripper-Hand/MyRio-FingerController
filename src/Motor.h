@@ -28,12 +28,12 @@ public:
 	void set_speed(double speed);
 	void forwards();
 	void backwards();
-private:
-	MyRio_Dio enable_pin;
-	MyRio_Dio direction_pin;
 
 	NiFpga_Bool is_enabled;
 	NiFpga_Bool direction;
+private:
+	MyRio_Dio enable_pin;
+	MyRio_Dio direction_pin;
 
 	MyRio_Aio speed_pin;
 	double current_speed;

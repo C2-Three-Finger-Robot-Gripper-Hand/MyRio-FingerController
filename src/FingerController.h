@@ -12,6 +12,7 @@
 #define TICKS_PER_SECOND 100
 
 #include "MotorController.h"
+#include "States.h"
 
 /*Rotary encoder configs*/
 const Encoder_Config MOTOR1_ENCODER_CONFIG = {
@@ -63,12 +64,6 @@ const LimitSwitch_Config MOTOR2_END_SWITCH2_CONFIG = {{NiFpga_FPGAMainDefault_In
 
 const LimitSwitch_Config MOTOR3_END_SWITCH1_CONFIG = {{NiFpga_FPGAMainDefault_IndicatorU8_DIOB_30IN2,0}};
 const LimitSwitch_Config MOTOR3_END_SWITCH2_CONFIG = {{NiFpga_FPGAMainDefault_IndicatorU8_DIOB_30IN2,1}};
-
-typedef enum{
-	controller_running_mode,
-	controller_idle_mode,
-	controller_calibrating_mode
-} controller_mode;
 
 class FingerController {
 public:
