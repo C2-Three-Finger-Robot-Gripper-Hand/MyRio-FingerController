@@ -45,18 +45,33 @@ void FingerController::run(){
 		modbus_controller->run();
 		if(mode == controller_running_mode){
 			motor_controller1->run();
-			//motor_controller2->run();
-			//motor_controller3->run();
+			motor_controller2->run();
+			motor_controller3->run();
 		} else if (mode == controller_calibrating_mode) {
-			printf("calibrating");
-			motor_controller1->calibrate();
-//			motor_controller2->calibrate();
-//			motor_controller3->calibrate();
+
+			if (!motor_controller1->isCalibrated()) {
+//				printf("calibrating motor 1\n");
+				motor_controller1->calibrate();
+			}
+			else if (!motor_controller2->isCalibrated()) {
+//				printf("calibrating motor 2\n");
+				motor_controller2->calibrate();
+			}
+			else if (!motor_controller3->isCalibrated()) {
+//				printf("calibrating motor 3\n");
+				motor_controller3->calibrate();
+			}
+			else {
+				printf("calibration done\n");
+				this->set_controller_mode(controller_idle_mode);
+			}
 		}
 	}
 }
 
 void FingerController::set_controller_mode(double mode_number){
+	printf("mode number: %f, calibrating mode: %u", mode_number, controller_calibrating_mode);
+
 	if(mode_number == controller_idle_mode){
 		motor_controller1->setState(controller_idle_mode);
 		motor_controller2->setState(controller_idle_mode);
@@ -71,7 +86,7 @@ void FingerController::set_controller_mode(double mode_number){
 		motor_controller1->setState(controller_calibrating_mode);
 		motor_controller2->setState(controller_calibrating_mode);
 		motor_controller3->setState(controller_calibrating_mode);
-		this->mode = controller_idle_mode;
+		this->mode = controller_calibrating_mode;
 
 	}
 }

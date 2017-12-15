@@ -62,7 +62,7 @@ void MotorController::run(){
 
 void MotorController::calibrate() {
 	if (this->calibrating_state == calibrating_not_done) {
-		printf("not_done\n");
+//		printf("not_done\n");
 		this->motor->set_speed(20);
 		this->calibrating_state = calibrating_end_switch_2;
 	} else if (this->calibrating_state == calibrating_end_switch_2) {
@@ -137,6 +137,7 @@ void MotorController::setMotorPosition(double degree) {
 		if (degree > MOTOR_POSITION_MAX) degree = MOTOR_POSITION_MAX;
 
 		this->requestedMotorPosition = degree;
+		printf("change motor position: %f", this->requestedMotorPosition);
 	}
 }
 

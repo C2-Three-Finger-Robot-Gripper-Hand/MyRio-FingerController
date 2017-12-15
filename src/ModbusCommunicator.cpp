@@ -34,8 +34,8 @@ ModbusCommunicator::ModbusCommunicator(FingerController *fingerController){
      */
 	using namespace std::placeholders;
 	writingRegisters[0] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
-	writingRegisters[1] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
-	writingRegisters[2] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
+	writingRegisters[1] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller2, _1);
+	writingRegisters[2] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller3, _1);
 	writingRegisters[3] = std::bind(&FingerController::set_controller_mode, this->fingerController, _1);
 
     /*;
