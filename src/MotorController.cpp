@@ -35,7 +35,7 @@ void MotorController::setState(controller_state state){
 	}
 }
 
-void MotorController::run(){
+void MotorController::run(bool show){
 	if(currentState == controller_running_mode){
 //		printf("requested motor position: %f\n", requestedMotorPosition);
 		double requestedMotorPositionInStep = (this->requestedMotorPosition / MOTOR_POSITION_MAX) * this->maxSteps;
@@ -49,6 +49,14 @@ void MotorController::run(){
 		this->currentMotorPosition = MOTOR_POSITION_MAX * currentSteps / this->maxSteps;
 
 //  	printf("Speed: %f Current Steps: %zu Requested position step: %f Motor position(degree)%f\n", motorSpeed, currentSteps, requestedMotorPositionInStep, this->currentMotorPosition);
+
+		if (show) {
+			printf("requestedMotorPositionInStep: %f\n", requestedMotorPosition);
+			printf("current steps: %d\n", currentSteps);
+			printf("motor speed: %f\n", motorSpeed);
+			printf("current motor position: %d\n", this->currentMotorPosition);
+			printf("-------------------------------------------------\n");
+		}
 
 		if(motorSpeed >= 0){
 		  motor->set_speed(motorSpeed);
@@ -67,7 +75,7 @@ void MotorController::calibrate() {
 		this->calibrating_state = calibrating_end_switch_2;
 	} else if (this->calibrating_state == calibrating_end_switch_2) {
 		printf("calibrating_end_switch_2\n");
-		if (this->motor->direction == Forwards || !this->motor->is_enabled) {
+		if (!this->motor->direction == Forwards || !this->motor->is_enabled) {
 			this->motor->forwards();
 			this->motor->enable();
 		}
@@ -75,56 +83,27 @@ void MotorController::calibrate() {
 		if (this->end_switch_2->hasReachedLimit()) {
 			this->motor->disable();
 			this->encoder->resetSteps();
+//			printf("reset steps");
 			this->calibrating_state = calibrating_end_switch_1;
 		}
 	} else if (this->calibrating_state == calibrating_end_switch_1) {
 		printf("calibrating_end_switch_1\n");
-		if (this->motor->direction == Backwards || !this->motor->is_enabled) {
+		if (!this->motor->direction == Backwards || !this->motor->is_enabled) {
 			this->motor->backwards();
 			this->motor->enable();
 		}
 
 		if (this->end_switch_1->hasReachedLimit()) {
 			this->motor->disable();
-			this->maxSteps = this->encoder->readSteps();
+			uint32_t maxSteps = this->encoder->readSteps();
+//			printf("%u\n", maxSteps);
+			this->maxSteps = maxSteps;
+			printf("Max steps: %d\n", this->maxSteps);
 			this->calibrating_state = calibrating_done;
 		}
 	} else if (this->calibrating_state == calibrating_done) {
-		//send feedback that calibrating is done
 		printf("calibration done\n");
 	}
-
-//	this->motor->set_speed(20);
-//
-//	/*rotating to end switch 2*/
-//	this->motor->forwards();
-//	this->motor->enable();
-//
-//	printf("Going to switch 2\n");
-//	while(!this->end_switch_2->hasReachedLimit()) {
-//		usleep(1000);
-//	}
-//	this->motor->disable();
-//	printf("encoder value: %d\n", this->encoder->readSteps());
-//	printf("Reached endswitch 2\n");
-//
-//	this->encoder->resetSteps();
-//
-//	/*rotating to end switch 1, to get steps*/
-//	this->motor->backwards();
-//	this->motor->enable();
-//
-//	while(!this->end_switch_1->hasReachedLimit()) {
-//		usleep(1000);
-//	}
-//	printf("encoder value: %d\n", this->encoder->readSteps());
-//	printf("Reached endswitch 1\n");
-//
-//	this->motor->disable();
-//	this->maxSteps = this->encoder->readSteps();
-//	this->isCalibrated = NiFpga_True;
-//
-//	printf("Max steps: %d\n", this->maxSteps);
 }
 
 NiFpga_Bool MotorController::isCalibrated() {
@@ -137,7 +116,7 @@ void MotorController::setMotorPosition(double degree) {
 		if (degree > MOTOR_POSITION_MAX) degree = MOTOR_POSITION_MAX;
 
 		this->requestedMotorPosition = degree;
-		printf("change motor position: %f", this->requestedMotorPosition);
+		printf("change motor position: %f\n", this->requestedMotorPosition);
 	}
 }
 

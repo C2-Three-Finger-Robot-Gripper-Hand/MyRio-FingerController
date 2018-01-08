@@ -33,18 +33,15 @@ public:
 	LimitSwitch* end_switch_1;
 	LimitSwitch* end_switch_2;
 
-	void run();
+	void run(bool show);
 	void calibrate();
 	NiFpga_Bool isCalibrated();
 	void setState(controller_state state);
 	void setMotorPosition(double degree);
 	double requestedMotorPosition;
 	int currentMotorPosition;
-private:
 	controller_state currentState;
 	uint32_t maxSteps;
-
-
 	Calibrating calibrating_state;
 };
 
