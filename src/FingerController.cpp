@@ -41,7 +41,6 @@ void FingerController::run(){
 
 	printf("Start running\n");
 
-	set_controller_mode(controller_calibrating_mode);
 	for(;;){
 		modbus_controller->run();
 
@@ -87,6 +86,8 @@ void FingerController::run(){
 				if (motor_controller3->currentState != controller_running_mode) {
 					printf("set motor 3 to running mode\n");
 					motor_controller3->setState(controller_running_mode);
+					motor_controller1->setMotorPosition(45.0);
+					motor_controller2->setMotorPosition(45.0);
 					motor_controller3->setMotorPosition(90.0);
 				}
 				this->set_controller_mode(controller_running_mode);
