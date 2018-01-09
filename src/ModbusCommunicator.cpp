@@ -34,8 +34,8 @@ ModbusCommunicator::ModbusCommunicator(FingerController *fingerController){
      */
 	using namespace std::placeholders;
 	writingRegisters[0] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
-	writingRegisters[1] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
-	writingRegisters[2] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller1, _1);
+	writingRegisters[1] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller2, _1);
+	writingRegisters[2] = std::bind(&MotorController::setMotorPosition, this->fingerController->motor_controller3, _1);
 	writingRegisters[3] = std::bind(&FingerController::set_controller_mode, this->fingerController, _1);
 
     /*;
@@ -56,11 +56,12 @@ void ModbusCommunicator::run(){
 	int32_t status = 0;
 
     enableRX();
+    memset(buf, 0, sizeof(char)*254);
 	status = Uart_Read(&uart, buf, 254, &read_count);
 	if (status != VI_ERROR_TMO){
 		for(int i = 0; i < (long)read_count; i++){
 			if(buf[i] == ':'){		//New message, discard old message
-				memset(message, 0, sizeof message );
+				memset(message, 0, sizeof(char)*254);
 				position = 0;
 			}else if(buf[i] == '\n'){	//Message ended.
 				message[position] = '\0';
@@ -100,6 +101,14 @@ void ModbusCommunicator::writeHoldingRegister(char *message, int length){
 
 	printf("Write holding register from %d and a number of %d with a datalength of %d \n", startAdress, registerQuantity, dataLength);
 
+	char data[10] = {0};
+	data[0] = '1';								//Function code
+	data[1] = '0';								//Function code
+    sprintf(&data[2], "%04x", startAdress);		//Starting address
+    sprintf(&data[6], "%04x", registerQuantity);//Quantity registers
+
+    sendData(data, 10);
+
 	//Writing to registers
     for(int i = 0; i < registerQuantity; i++){
     	int registerNumber = startAdress + i;
@@ -109,14 +118,6 @@ void ModbusCommunicator::writeHoldingRegister(char *message, int length){
         	writingRegisters[registerNumber]((double)value);
     	}
     }
-
-	char data[10];
-	data[0] = '1';								//Function code
-	data[1] = '0';								//Function code
-    sprintf(&data[2], "%04x", startAdress);		//Starting address
-    sprintf(&data[6], "%04x", registerQuantity);//Quantity registers
-
-    sendData(data, 10);
 }
 
 void ModbusCommunicator::readHoldingRegister(char *message, int length){
@@ -147,6 +148,7 @@ void ModbusCommunicator::readHoldingRegister(char *message, int length){
 void ModbusCommunicator::sendData(char *data, int length){
 	int msgLength = length + 7;
 	char message[msgLength];
+    memset(message, 0, sizeof(char)*msgLength);
 
 	message[0] = ':';							//Start byte
     sprintf(&message[1], "%02x", SlaveAdress);	//Slave Address
@@ -157,6 +159,8 @@ void ModbusCommunicator::sendData(char *data, int length){
 
     printf("Sending message: ");
     uint8_t message_uint8[msgLength];
+    memset(message_uint8, 0, sizeof(uint8_t)*msgLength);
+
     for(int i = 0; i < msgLength ; i++){
         printf("%c", message[i]);
     	message_uint8[i] = message[i];

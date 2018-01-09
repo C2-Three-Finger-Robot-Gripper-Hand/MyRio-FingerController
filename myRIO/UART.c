@@ -100,7 +100,8 @@ int32_t Uart_Open(MyRio_Uart* port, const uint32_t baud,
     /*
      * Set termination character.
      */
-    status = viSetAttribute(port->session, VI_ATTR_TERMCHAR_EN, VI_FALSE);
+    status = viSetAttribute(port->session, VI_ATTR_TERMCHAR, 0x0A);
+    status = viSetAttribute(port->session, VI_ATTR_TERMCHAR_EN, VI_TRUE);
     if (status < VI_SUCCESS)
     {
         return status;
@@ -182,8 +183,10 @@ int32_t Uart_Write(MyRio_Uart* port, const uint8_t* const data,
     int32_t status = VI_SUCCESS;
     ViUInt32 numberWritten = 0;
 
-    status = viWrite(port->session, (ViBuf)data, (ViUInt32)nData,
+    status = viBufWrite(port->session, (ViBuf)data, (ViUInt32)nData,
                      &numberWritten);
+
+    viFlush(port->session, VI_WRITE_BUF);
     return status;
 }
 

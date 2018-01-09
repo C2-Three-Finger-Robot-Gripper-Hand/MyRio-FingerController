@@ -12,15 +12,11 @@
 #include "RotaryEncoder.h"
 #include "LimitSwitch.h"
 #include "Pid.h"
+#include "States.h"
 
 #define MOTOR_POSITION_MAX 180.0
 #define MOTOR_POSITION_MIN 0.0
 
-enum MotorControllerState{
-	idle,
-	running,
-	calibrating,
-};
 
 class MotorController{
 public:
@@ -37,16 +33,16 @@ public:
 	LimitSwitch* end_switch_1;
 	LimitSwitch* end_switch_2;
 
-	void run();
+	void run(bool show);
 	void calibrate();
-	void setState(MotorControllerState state);
+	NiFpga_Bool isCalibrated();
+	void setState(controller_state state);
 	void setMotorPosition(double degree);
 	double requestedMotorPosition;
 	int currentMotorPosition;
-private:
-	MotorControllerState currentState;
+	controller_state currentState;
 	uint32_t maxSteps;
-	NiFpga_Bool isCalibrated;
+	Calibrating calibrating_state;
 };
 
 #endif /* MOTORCONTROLLER_H_ */
